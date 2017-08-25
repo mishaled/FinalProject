@@ -10,23 +10,6 @@ namespace DAL
 {
     public class Neo4jDAL
     {
-        //private const string WRITE_WHOLE_GRAPHS_NODES_AND_RETURN_IDS_COMMAND =
-        //    @"WITH {graph} as graph
-        //    unwind graph.nodes as node
-        //    create (n:Node {id: node.id, label: node.label})
-        //    return n.id as id, n.label as label, ID(n) as internal_id";
-
-        //private const string WRITE_WHOLE_GRAPHS_EDGES =
-        //    @"WITH {Graph} as graph
-        //    unwind graph.edges as edge
-        //    MATCH (n1)
-        //    WHERE ID(n1) = edge.u_dbId
-        //    MATCH (n2)
-        //    WHERE ID(n2) = edge.v_dbId
-        //    CREATE (n1)-[r:CONNECTED_TO { label: edge.l_w }]->(n2)
-        //    return r.Type as type, r.label as label;";
-
-
         private const string WRITE_WHOLE_GRAPH =
             @"WITH {graph} as graph
             unwind graph.nodes as node
@@ -35,10 +18,7 @@ namespace DAL
             unwind graph.edges as edge
             MATCH (n1:Node {graphId : edge.GraphID, id : edge.u}), (n2:Node {graphId : edge.GraphID, id : edge.v})
             CREATE UNIQUE (n1)-[r:CONNECTED_TO { label: edge.l_w, graphId : edge.GraphID }]->(n2) return n1.id as u, n2.id as v";
-
-        //private const string GET_SUBGRAPH_BY_ID_STATEMENT = @"MATCH (u {graphId:{graphId}})-[edge {graphId:{graphId}}]->(v {graphId:{graphId}}) RETURN u,edge,v;";
         private const string GET_SUBGRAPH_BY_ID_STATEMENT = @"MATCH (u {graphId:{graphId}})-[edge {graphId:{graphId}}]->(v {graphId:{graphId}}) RETURN u.id as u_id, u.label as u_label, edge.label as l_w, v.id as v_id, v.label as v_label";
-
 
         public void WriteWholeGraph(Graph graph)
         {
@@ -63,23 +43,18 @@ namespace DAL
 
             foreach (var record in results)
             {
-                //object uNeo4jNode = record["u"];
                 Node uNode = new Node()
                 {
                     graphId = id,
                     id = int.Parse(record["u_id"].ToString()),
                     label = int.Parse(record["u_label"].ToString())
                 };
-                //convertNeo4jNodeIntoNode(uNeo4jNode);
-                //object vNeo4jNode = record["v"];
-                //Node vNode = convertNeo4jNodeIntoNode(vNeo4jNode);
                 Node vNode = new Node()
                 {
                     graphId = id,
                     id = int.Parse(record["v_id"].ToString()),
                     label = int.Parse(record["v_label"].ToString())
                 };
-                //object neo4jRelationship = record["edge"];
                 DFS_Code dfsCode = new DFS_Code()
                 {
                     GraphID = id,
@@ -89,7 +64,6 @@ namespace DAL
                     u = uNode.id,
                     v = vNode.id
                 };
-                    //convertNeo4jRelationshipIntoDFSCode(neo4jRelationship);
 
                 if (!graph.nodes.Contains(uNode))
                 {
@@ -119,30 +93,5 @@ namespace DAL
         {
             return null;
         }
-
-
-        //public List<Graph> ReadAllGraphs()
-        //{
-        //    var graphs = new List<Graph>();
-        //    var nodes = new List<Node>();
-        //    var graph = new Graph();
-        //    graphs.Add(graph);
-
-        //    using (ISession session = Neo4jConnectionManager.GetSession())
-        //    {
-        //        var results = session.Run("Match (n:Node) return n.id as id, n.label as label");
-
-        //        foreach (var record in results)
-        //        {
-        //            graph.nodes.Add(new Node()
-        //            {
-        //                id = record["id"].As<int>(),
-        //                label = record["label"].As<int>()
-        //            });
-        //        }
-        //    }
-
-        //    return graphs;
-        //}
     }
 }

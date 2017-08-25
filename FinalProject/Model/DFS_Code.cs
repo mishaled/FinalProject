@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    class DFS_Code : IEquatable<DFS_Code>
+    public class DFS_Code : IEquatable<DFS_Code>
     {
         public int u { get; set; } // vertex u
         public int v { get; set; } // vertex v
@@ -15,18 +15,57 @@ namespace Model
         public int l_w { get; set; } // label of edge uv
         public int support { get; set; } // support of this DFS code (edge)
         public int GraphID { get; set; } // graph contains this DFS code (edge)
+        //public int u_dbId { get; set; }
+        //public int v_dbId { get; set; }
+
+        public DFS_Code()
+        {
+            //u_dbId = -1;
+            //v_dbId = -1;
+        }
 
         public bool Equals(DFS_Code other)
         {
-            if (this.u == other.u && this.v == other.v && this.l_u == other.l_u && this.l_v == other.l_v
-                && this.l_w == other.l_w && this.GraphID == other.GraphID)
-            {
-                return true;
-            }
-            else
+            if (this.u != other.u)
             {
                 return false;
             }
+            if (this.v != other.v)
+            {
+                return false;
+            }
+
+            if (this.l_u != other.l_u)
+            {
+                return false;
+            }
+
+            if (this.l_v != other.l_v)
+            {
+                return false;
+            }
+
+            if (this.l_w != other.l_w)
+            {
+                return false;
+            }
+
+            if (this.GraphID != other.GraphID)
+            {
+                return false;
+            }
+
+            //if (this.u_dbId >= 0 && other.u_dbId >= 0 && this.u_dbId != other.u_dbId)
+            //{
+            //    return false;
+            //}
+
+            //if (this.v_dbId >= 0 && other.v_dbId >= 0 && this.v_dbId != other.v_dbId)
+            //{
+            //    return false;
+            //}
+
+            return true;
         }
 
         public bool LessThan(DFS_Code other)

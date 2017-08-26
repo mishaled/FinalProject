@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="DFS_Code.cs" />
     <Compile Include="Graph.cs" />
+    <Compile Include="Isomorphism.cs" />
+    <Compile Include="Neighbor.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

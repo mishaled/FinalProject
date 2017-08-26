@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="EulerPathGenerator.cs" />
     <Compile Include="GraphPathsGenerator.cs" />
+    <Compile Include="PathFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

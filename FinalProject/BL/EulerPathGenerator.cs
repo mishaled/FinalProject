@@ -8,7 +8,9 @@ namespace BL
     {
         public List<List<DFS_Code>> Generate(Graph graph)
         {
-            return GenerateHelper(graph, graph.edges.ToList(), graph.nodes.First());
+            return GenerateHelper(graph, graph.edges.ToList(), graph.nodes.First())
+                .Where(x => x.Count == graph.Size)
+                .Select(x => x.ToList()).ToList();
         }
 
         public bool DoesGraphContainEulerPath(Graph graph)
@@ -17,7 +19,7 @@ namespace BL
 
             foreach (var node in graph.nodes)
             {
-                var adjacentEdgesCount = graph.edges.Count(x => x.u == node.id || x.v == node.id);
+                int adjacentEdgesCount = graph.edges.Count(x => x.u == node.id || x.v == node.id);
 
                 if (adjacentEdgesCount % 2 == 0)
                 {
@@ -35,24 +37,47 @@ namespace BL
             return true;
         }
 
-        public List<List<DFS_Code>> GenerateHelper(Graph graph, List<DFS_Code> unusedEdges, Node currentNode)
+        public List<LinkedList<DFS_Code>> GenerateHelper(Graph graph, List<DFS_Code> unusedEdges, Node currentNode)
         {
-            var adjacentEdges = graph.edges.Where(x => x.u == currentNode.id);
-            var unusedAdjacentEdges = adjacentEdges.Where(x => unusedEdges.Contains(x));
+            List<DFS_Code> adjacentEdges = graph.edges.Where(x => x.u == currentNode.id || x.v == currentNode.id).ToList();
+            List<DFS_Code> unusedAdjacentEdges = adjacentEdges.Where(unusedEdges.Contains).ToList();
+            List<LinkedList<DFS_Code>> aggregatedPaths = new List<LinkedList<DFS_Code>>();
 
-            foreach (var edge in unusedAdjacentEdges)
+            foreach (DFS_Code edge in unusedAdjacentEdges)
             {
-                var list = new List<DFS_Code>();
-                list.Add(edge);
-                var nextNode = graph.nodes.First(x => x.id == edge.v);
+                Node nextNode = FindNextNode(graph, currentNode, edge);
 
-                var lists = GenerateHelper(graph, unusedEdges.Where(x => x != edge).ToList(), nextNode);
-                lists.ForEach(x => x.Add(edge));
+                List<DFS_Code> unusedEdgesExcludingCurrentEdge = unusedEdges.Where(x => x != edge).ToList();
+                List<LinkedList<DFS_Code>> lists = GenerateHelper(graph, unusedEdgesExcludingCurrentEdge, nextNode);
 
-                return lists;
+                lists.ForEach(x => x.AddFirst(edge));
+
+                if (!lists.Any())
+                {
+                    LinkedList<DFS_Code> list = new LinkedList<DFS_Code>();
+                    list.AddFirst(edge);
+                    lists.Add(list);
+                }
+
+                aggregatedPaths.AddRange(lists);
             }
 
-            return new List<List<DFS_Code>>();
+            return aggregatedPaths;
+        }
+
+        private static Node FindNextNode(Graph graph, Node currentNode, DFS_Code edge)
+        {
+            Node nextNode = null;
+
+            if (edge.u == currentNode.id)
+            {
+                nextNode = graph.nodes.First(x => x.id == edge.v);
+            }
+            else if (edge.v == currentNode.id)
+            {
+                nextNode = graph.nodes.First(x => x.id == edge.u);
+            }
+            return nextNode;
         }
     }
 }

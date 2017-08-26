@@ -9,24 +9,24 @@ namespace DAL
 {
     public static class Neo4jConnectionManager
     {
-        private static IDriver _neo4jDriver;
-        private static object _lock = new object();
-        private static IDriver neo4jdriver
-        {
-            get
-            {
-                if (_neo4jDriver == null)
-                {
-                    lock (_lock)
-                    {
-                        if (_neo4jDriver == null)
-                        {
-                            _neo4jDriver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "Aa123456"));
-                        }
-                    }
-                }
+        //private static IDriver _neo4jDriver;
+        //private static object _lock = new object();
+        private static IDriver neo4jdriver;
+        //{
+        //    get
+        //    {
 
-                return _neo4jDriver;
+
+        //        return _neo4jDriver;
+        //    }
+        //}
+
+        public static void Initialize(string neo4jUrl, string username, string password)
+        {
+            if (neo4jdriver == null)
+            {
+                //_neo4jDriver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "Aa123456"));
+                neo4jdriver = GraphDatabase.Driver(neo4jUrl, AuthTokens.Basic(username, password));
             }
         }
 

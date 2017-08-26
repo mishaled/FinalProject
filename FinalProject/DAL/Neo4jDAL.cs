@@ -18,7 +18,14 @@ namespace DAL
             unwind graph.edges as edge
             MATCH (n1:Node {graphId : edge.GraphID, id : edge.u}), (n2:Node {graphId : edge.GraphID, id : edge.v})
             CREATE UNIQUE (n1)-[r:CONNECTED_TO { label: edge.l_w, graphId : edge.GraphID }]->(n2) return n1.id as u, n2.id as v";
+
         private const string GET_SUBGRAPH_BY_ID_STATEMENT = @"MATCH (u {graphId:{graphId}})-[edge {graphId:{graphId}}]->(v {graphId:{graphId}}) RETURN u.id as u_id, u.label as u_label, edge.label as l_w, v.id as v_id, v.label as v_label";
+
+        public Neo4jDAL(string neo4jUrl, string username, string password)
+        {
+            //_neo4jDriver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "Aa123456"));
+            Neo4jConnectionManager.Initialize(neo4jUrl, username, password);
+        }
 
         public void WriteWholeGraph(Graph graph)
         {
@@ -26,6 +33,14 @@ namespace DAL
             {
                 session.Run(WRITE_WHOLE_GRAPH, new { graph = graph });
             }
+        }
+
+        public void WriteWholeGraphs(List<Graph> graphs)
+        {
+            graphs.ForEach(graph =>
+            {
+                WriteWholeGraph(graph);
+            });
         }
 
         public Graph GetGraphById(int id)

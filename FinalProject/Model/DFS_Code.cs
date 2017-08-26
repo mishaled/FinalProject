@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class DFS_Code : IEquatable<DFS_Code>
+    public class DFS_Code
     {
         public int u { get; set; } // vertex u
         public int v { get; set; } // vertex v
@@ -24,8 +24,15 @@ namespace Model
             //v_dbId = -1;
         }
 
-        public bool Equals(DFS_Code other)
+        public override bool Equals(object obj)
         {
+            DFS_Code other = obj as DFS_Code;
+
+            if (other == null)
+            {
+                return false;
+            }
+
             if (this.u != other.u)
             {
                 return false;
@@ -55,18 +62,51 @@ namespace Model
                 return false;
             }
 
-            //if (this.u_dbId >= 0 && other.u_dbId >= 0 && this.u_dbId != other.u_dbId)
-            //{
-            //    return false;
-            //}
-
-            //if (this.v_dbId >= 0 && other.v_dbId >= 0 && this.v_dbId != other.v_dbId)
-            //{
-            //    return false;
-            //}
-
             return true;
         }
+        //public bool Equals(DFS_Code other)
+        //{
+        //    if (this.u != other.u)
+        //    {
+        //        return false;
+        //    }
+        //    if (this.v != other.v)
+        //    {
+        //        return false;
+        //    }
+
+        //    if (this.l_u != other.l_u)
+        //    {
+        //        return false;
+        //    }
+
+        //    if (this.l_v != other.l_v)
+        //    {
+        //        return false;
+        //    }
+
+        //    if (this.l_w != other.l_w)
+        //    {
+        //        return false;
+        //    }
+
+        //    if (this.GraphID != other.GraphID)
+        //    {
+        //        return false;
+        //    }
+
+        //    //if (this.u_dbId >= 0 && other.u_dbId >= 0 && this.u_dbId != other.u_dbId)
+        //    //{
+        //    //    return false;
+        //    //}
+
+        //    //if (this.v_dbId >= 0 && other.v_dbId >= 0 && this.v_dbId != other.v_dbId)
+        //    //{
+        //    //    return false;
+        //    //}
+
+        //    return true;
+        //}
 
         public bool LessThan(DFS_Code other)
         {

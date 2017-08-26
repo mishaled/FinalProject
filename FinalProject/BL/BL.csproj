@@ -43,9 +43,14 @@
     <Compile Include="EulerPathGenerator.cs" />
     <Compile Include="GraphPathsGenerator.cs" />
     <Compile Include="PathFinder.cs" />
+    <Compile Include="PatternMatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{b9c7331f-a19e-4235-99b1-ff6674c792d8}</Project>
+      <Name>DAL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{d031c4cf-f289-4adb-9ada-29c1912443d2}</Project>
       <Name>Model</Name>

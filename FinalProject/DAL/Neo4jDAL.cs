@@ -8,7 +8,7 @@ using Model;
 
 namespace DAL
 {
-    public class Neo4jDAL
+    public class Neo4jDAL : INeo4jDAL
     {
         private const string WRITE_WHOLE_GRAPH =
             @"WITH {graph} as graph
@@ -25,6 +25,20 @@ namespace DAL
         {
             //_neo4jDriver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "Aa123456"));
             Neo4jConnectionManager.Initialize(neo4jUrl, username, password);
+        }
+
+        public List<int> GetMatchingGraphsIds(List<DFS_Code> path)
+        {
+            EdgePathToCypherQueryConverter converter = new EdgePathToCypherQueryConverter();
+            var neo4jQuery = converter.Convert(path);
+            neo4jQuery = "match (n1:Node {id:3})-[:CONNECTED_TO]-(n2:Node {id:0}) return DISTINCT n1.graphId";
+
+            using (ISession session = Neo4jConnectionManager.GetSession())
+            {
+                var t = session.Run(neo4jQuery);
+            }
+
+            return null;
         }
 
         public void WriteWholeGraph(Graph graph)

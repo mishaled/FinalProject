@@ -26,6 +26,11 @@ namespace Model
             this.id = id;
         }
 
+        public int Size
+        {
+            get { return edges.Count; }
+        }
+
         public override bool Equals(object obj)
         {
             var other = obj as Graph;
@@ -40,7 +45,7 @@ namespace Model
                 return false;
             }
 
-            if (!Enumerable.SequenceEqual(nodes,other.nodes))
+            if (!Enumerable.SequenceEqual(nodes, other.nodes))
             {
                 return false;
             }

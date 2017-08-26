@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL.IntegrationTests", "DAL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo4jSyntheticDatabaseFiller", "Neo4jSyntheticDatabaseFiller\Neo4jSyntheticDatabaseFiller.csproj", "{512D2F21-0292-497C-8195-CDBA2B380341}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BL", "BL\BL.csproj", "{7F520237-D847-46B7-9BD0-648899E008AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BL.UnitTests", "BL.UnitTests\BL.UnitTests.csproj", "{87971784-A549-4B1B-8782-B12B43A0993D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{512D2F21-0292-497C-8195-CDBA2B380341}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{512D2F21-0292-497C-8195-CDBA2B380341}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{512D2F21-0292-497C-8195-CDBA2B380341}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F520237-D847-46B7-9BD0-648899E008AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F520237-D847-46B7-9BD0-648899E008AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F520237-D847-46B7-9BD0-648899E008AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F520237-D847-46B7-9BD0-648899E008AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87971784-A549-4B1B-8782-B12B43A0993D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87971784-A549-4B1B-8782-B12B43A0993D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87971784-A549-4B1B-8782-B12B43A0993D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87971784-A549-4B1B-8782-B12B43A0993D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

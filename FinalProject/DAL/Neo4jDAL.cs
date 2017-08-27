@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Neo4j.Driver.V1;
 using Model;
@@ -71,8 +72,34 @@ namespace DAL
 
             File.Delete(nodesFilename);
             File.Delete(relationshipsFilename);
-            File.Delete(newNodesFilepath);
-            File.Delete(newRelationshipsFilepath);
+            //Task.Factory.StartNew(() =>
+            //{
+            //    for (int numTries = 0; numTries < 10; numTries++)
+            //    {
+            //        try
+            //        {
+            //            File.Delete(newNodesFilepath);
+            //        }
+            //        catch (IOException)
+            //        {
+            //            Thread.Sleep(50);
+            //        }
+            //    }
+            //});
+            //Task.Factory.StartNew(() =>
+            //{
+            //    for (int numTries = 0; numTries < 10; numTries++)
+            //    {
+            //        try
+            //        {
+            //            File.Delete(newRelationshipsFilepath);
+            //        }
+            //        catch (IOException)
+            //        {
+            //            Thread.Sleep(50);
+            //        }
+            //    }
+            //});
 
             return sw.Elapsed;
         }
@@ -90,12 +117,19 @@ namespace DAL
             EdgePathToCypherQueryConverter converter = new EdgePathToCypherQueryConverter();
             string neo4jQuery = converter.Convert(path);
 
+            List<int> ids = new List<int>();
+
             using (ISession session = Neo4jConnectionManager.GetSession())
             {
-                var t = session.Run(neo4jQuery);
+                IStatementResult results = session.Run(neo4jQuery);
+
+                foreach (var record in results)
+                {
+                    ids.Add(int.Parse(record["graphId"].ToString()));
+                }
             }
 
-            throw new NotImplementedException();
+            return ids;
         }
 
         public void WriteWholeGraph(Graph graph)

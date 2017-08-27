@@ -35,7 +35,7 @@ namespace DAL
                 query += string.Format("-[:CONNECTED_TO {{label: {0} }}]-(n{1} {{id: {2}, label: {3}}})", edge.l_w, index + 1, order.Item3, order.Item4);
             }
 
-            query += " return DISTINCT n0.graphId";
+            query += " return DISTINCT n0.graphId as graphId";
 
             return query;
         }

@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DAL;
 using Model;
 using System.Collections.Generic;
+using System.Linq;
 using Common;
 using Newtonsoft;
 
@@ -80,6 +81,17 @@ namespace DAL.IntegrationTests
             var graphAfterReload = dal.GetGraphById(graph.id);
 
             Assert.AreEqual(graph, graphAfterReload);
+        }
+
+        [TestMethod]
+        public void GetMatchingGraphsIds_ShouldFindCorrectGraph()
+        {
+            Random rand = new Random();
+            Graph graph = MockGraphFactory.GenerateEulerianGraph(1000 + rand.Next(10000));
+            dal.WriteWholeGraph(graph);
+            List<int> matchingGraphs = dal.GetMatchingGraphsIds(new List<DFS_Code>() { graph.edges.First() });
+
+            CollectionAssert.Contains(matchingGraphs, graph.id);
         }
     }
 }

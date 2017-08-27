@@ -30,7 +30,7 @@ namespace BL
         public List<Graph> GetUnverifiedMatches(Graph query)
         {
             List<int> unverifiedMatchesIds = GetUnverifiedMatchesIds(query);
-            var dal = DIFactory.Resolve<INeo4jDAL>();
+            INeo4jDAL dal = DIFactory.Resolve<INeo4jDAL>();
             List<Graph> matches = new List<Graph>();
 
             unverifiedMatchesIds.ForEach(matchId =>
@@ -43,7 +43,7 @@ namespace BL
 
         public List<int> GetUnverifiedMatchesIds(Graph query)
         {
-            var dal = DIFactory.Resolve<INeo4jDAL>();
+            INeo4jDAL dal = DIFactory.Resolve<INeo4jDAL>();
 
             GraphPathsGenerator graphPathsGenerator = new GraphPathsGenerator();
             var paths = graphPathsGenerator.Generate(query);
@@ -57,9 +57,9 @@ namespace BL
             return IntersectNonEmpty(idsLists);
         }
 
-        private bool Verify(Graph match, Graph query)
+        public bool Verify(Graph match, Graph query)
         {
-            var generator = new SubgraphIsomorphismGenerator();
+            SubgraphIsomorphismGenerator generator = new SubgraphIsomorphismGenerator();
             return generator.IsSubgraphIsomorphic(query, match);
         }
 

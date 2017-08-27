@@ -125,7 +125,7 @@ namespace BL.UnitTests
             PatternMatcher mathcher = new PatternMatcher();
             List<Graph> matches = mathcher.Match(graph2);
 
-            CollectionAssert.Contains(matches, graph2);
+            CollectionAssert.Contains(matches, graph1);
         }
     }
 }

@@ -7,6 +7,7 @@ using DAL;
 using Model;
 using System.Configuration;
 using System.Diagnostics;
+using BL;
 using Common;
 
 namespace Neo4jSyntheticDatabaseFiller
@@ -18,32 +19,25 @@ namespace Neo4jSyntheticDatabaseFiller
             RegisterDal();
 
             Console.WriteLine("Start");
+
             if (args.Length == 0)
             {
                 return;
             }
+
             Console.WriteLine("Start reading synth graphs");
 
-            SyntheticGraphDatabaseReader reader = new SyntheticGraphDatabaseReader();
-            List<Graph> graphs = reader.Read(args[0]);
+            SyntheticGraphDatabaseLoader reader = new SyntheticGraphDatabaseLoader(args[0]);
 
-            Console.WriteLine("Finish reading synth graphs");
+            var sw = Stopwatch.StartNew();
+            List<Graph> graphs = reader.Load();
+            sw.Stop();
 
-
-            //var graphsToWrite = graphs.Where(x => x.id >= 2748).ToList();
-            //DIFactory.Resolve<INeo4jDAL>().BatchWriteWholeGraphs(graphsToWrite);
-
-            foreach (var graph in graphs.Where(x => x.id >= 4176))
-            {
-                Stopwatch sw = Stopwatch.StartNew();
-                DIFactory.Resolve<INeo4jDAL>().WriteWholeGraph(graph);
-                sw.Stop();
-                Console.WriteLine("Took: " + sw.Elapsed + " to write graph #" + graphs.IndexOf(graph) + " to the db");
-            }
+            Console.WriteLine("Took: " + sw.Elapsed + " to write #" + graphs.Count + " graphs to the db");
 
             Console.WriteLine("Finished");
 
-            Console.ReadLine();
+            Console.Read();
         }
 
         private static void RegisterDal()

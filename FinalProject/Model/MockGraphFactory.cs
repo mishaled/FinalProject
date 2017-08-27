@@ -1,319 +1,92 @@
-﻿namespace Model
+﻿using System;
+
+namespace Model
 {
     public static class MockGraphFactory
     {
-        public static Graph GenerateGraphWithOneEdge(int graphId = 0)
+        public static Graph GenerateGraphWithOneEdge(int? graphId = null)
         {
-            Graph graph = new Graph()
-            {
-                id = graphId
-            };
+            Graph graph = generateGraphWithIdIfNeeded(graphId);
 
-            graph.nodes.Add(new Node()
-            {
-                id = 0,
-                label = 1,
-                graphId = graph.id
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 1,
-                label = 2,
-                graphId = graph.id
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 0,
-                v = 1,
-                l_u = 1,
-                l_v = 2,
-                l_w = 4,
-                GraphID = graph.id
-            });
+            graph.AddNode(0, 1);
+            graph.AddNode(1, 2);
+            graph.AddEdge(0, 1, 4);
 
             return graph;
         }
 
-        public static Graph GenerateSquareGraph(int graphId = 0)
+        public static Graph GenerateSquareGraph(int? graphId = null)
         {
-            Graph graph = new Graph(graphId);
+            Graph graph = generateGraphWithIdIfNeeded(graphId);
 
-            graph.nodes.Add(new Node()
-            {
-                id = 0,
-                label = 0,
-                graphId = graphId
-            });
+            graph.AddNode(0, 0);
+            graph.AddNode(1, 1);
+            graph.AddNode(2, 2);
+            graph.AddNode(3, 3);
 
-            graph.nodes.Add(new Node()
-            {
-                id = 1,
-                label = 1,
-                graphId = graphId
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 2,
-                label = 2,
-                graphId = graphId
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 3,
-                label = 3,
-                graphId = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 0,
-                v = 1,
-                l_w=0,
-                GraphID = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 1,
-                v = 2,
-                l_w = 1,
-                GraphID = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 2,
-                v = 3,
-                l_w =2,
-                GraphID = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 3,
-                v = 0,
-                l_w = 3,
-                GraphID = graphId
-            });
+            graph.AddEdge(0, 1, 0);
+            graph.AddEdge(1, 2, 1);
+            graph.AddEdge(2, 3, 2);
+            graph.AddEdge(3, 0, 3);
 
             return graph;
         }
 
-        public static Graph GenerateSquareGraphWithTwoLines(int graphId = 0)
+        public static Graph GenerateSquareGraphWithTwoLines(int? graphId = null)
         {
-            Graph graph = new Graph(graphId);
+            Graph graph = generateGraphWithIdIfNeeded(graphId);
 
-            graph.nodes.Add(new Node()
-            {
-                id = 0,
-                label = 0,
-                graphId = graph.id
-            });
+            graph.AddNode(0, 0);
+            graph.AddNode(1, 1);
+            graph.AddNode(2, 2);
+            graph.AddNode(3, 3);
+            graph.AddNode(4, 4);
+            graph.AddNode(5, 5);
 
-            graph.nodes.Add(new Node()
-            {
-                id = 1,
-                label = 1,
-                graphId = graph.id
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 2,
-                label = 2,
-                graphId = graphId
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 3,
-                label = 3,
-                graphId = graphId
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 4,
-                label = 4,
-                graphId = graphId
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 5,
-                label = 5,
-                graphId = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 0,
-                v = 1,
-                l_u = 0,
-                l_v = 1,
-                l_w = 0,
-                GraphID = graph.id
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 1,
-                v = 2,
-                GraphID = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 2,
-                v = 3,
-                GraphID = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 3,
-                v = 1,
-                GraphID = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 2,
-                v = 4,
-                GraphID = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 3,
-                v = 5,
-                GraphID = graphId
-            });
+            graph.AddEdge(0, 1, 0);
+            graph.AddEdge(1, 2, 0);
+            graph.AddEdge(2, 3, 0);
+            graph.AddEdge(3, 1, 0);
+            graph.AddEdge(2, 4, 0);
+            graph.AddEdge(3, 5, 0);
 
             return graph;
         }
 
-        public static Graph GenerateEulerianGraph(int graphId = 0)
+        public static Graph GenerateEulerianGraph(int? graphId = null)
         {
-            Graph graph = new Graph(graphId);
+            Graph graph = generateGraphWithIdIfNeeded(graphId);
 
-            graph.nodes.Add(new Node()
-            {
-                id = 0,
-                label = 0,
-                graphId = graphId
-            });
+            graph.AddNode(0, 0);
+            graph.AddNode(1, 1);
+            graph.AddNode(2, 2);
+            graph.AddNode(3, 3);
+            graph.AddNode(4, 4);
+            graph.AddNode(5, 5);
 
-            graph.nodes.Add(new Node()
-            {
-                id = 1,
-                label = 1,
-                graphId = graphId
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 2,
-                label = 2,
-                graphId = graphId
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 3,
-                label = 3,
-                graphId = graphId
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 4,
-                label = 4,
-                graphId = graphId
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 5,
-                label = 5,
-                graphId = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 0,
-                v = 1,
-                l_u=0,
-                l_v = 1,
-                l_w = 0,
-                GraphID = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 1,
-                v = 3,
-                l_u = 1,
-                l_v = 3,
-                l_w = 1,
-                GraphID = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 3,
-                v = 2,
-                l_u = 3,
-                l_v = 2,
-                l_w = 2,
-                GraphID = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 2,
-                v = 0,
-                l_u = 2,
-                l_v = 0,
-                l_w = 3,
-                GraphID = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 2,
-                v = 4,
-                l_u = 2,
-                l_v = 4,
-                l_w = 4,
-                GraphID = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 4,
-                v = 5,
-                l_u = 4,
-                l_v = 5,
-                l_w = 5,
-                GraphID = graphId
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 5,
-                v = 2,
-                l_u = 5,
-                l_v = 2,
-                l_w = 6,
-                GraphID = graphId
-            });
+            graph.AddEdge(0, 1, 0);
+            graph.AddEdge(1, 3, 1);
+            graph.AddEdge(3, 2, 2);
+            graph.AddEdge(2, 0, 3);
+            graph.AddEdge(2, 4, 3);
+            graph.AddEdge(4, 5, 5);
+            graph.AddEdge(5, 2, 6);
 
             return graph;
+        }
+
+        private static Graph generateGraphWithIdIfNeeded(int? graphId)
+        {
+            if (graphId != null)
+            {
+                return new Graph(graphId.Value);
+            }
+
+            Random rand = new Random();
+            int randomID = 1000000;
+            randomID += rand.Next(1000000);
+
+            return new Graph(randomID);
         }
     }
 }

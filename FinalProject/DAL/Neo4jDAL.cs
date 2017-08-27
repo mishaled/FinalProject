@@ -191,55 +191,29 @@ namespace DAL
 
             foreach (var record in results)
             {
-                Node uNode = new Node()
-                {
-                    graphId = id,
-                    id = int.Parse(record["u_id"].ToString()),
-                    label = int.Parse(record["u_label"].ToString())
-                };
-                Node vNode = new Node()
-                {
-                    graphId = id,
-                    id = int.Parse(record["v_id"].ToString()),
-                    label = int.Parse(record["v_label"].ToString())
-                };
-                DFS_Code dfsCode = new DFS_Code()
-                {
-                    GraphID = id,
-                    l_u = uNode.label,
-                    l_v = vNode.label,
-                    l_w = int.Parse(record["l_w"].ToString()),
-                    u = uNode.id,
-                    v = vNode.id
-                };
+                int u_id = int.Parse(record["u_id"].ToString());
+                int u_label = int.Parse(record["u_label"].ToString());
+                int v_id = int.Parse(record["v_id"].ToString());
+                int v_label = int.Parse(record["v_label"].ToString());
+                int edge_label = int.Parse(record["l_w"].ToString());
 
-                if (!graph.nodes.Contains(uNode))
+                if (!graph.DoesNodeExist(u_id, u_label))
                 {
-                    graph.nodes.Add(uNode);
+                    graph.AddNode(u_id, u_label);
                 }
 
-                if (!graph.nodes.Contains(vNode))
+                if (!graph.DoesNodeExist(v_id, v_label))
                 {
-                    graph.nodes.Add(vNode);
+                    graph.AddNode(v_id, v_label);
                 }
 
-                if (!graph.edges.Contains(dfsCode))
+                if (!graph.DoesEdgeExist(u_id, v_id, edge_label))
                 {
-                    graph.edges.Add(dfsCode);
+                    graph.AddEdge(u_id, v_id, edge_label);
                 }
             }
 
             return graph;
-        }
-
-        private DFS_Code convertNeo4jRelationshipIntoDFSCode(object neo4jRelationship)
-        {
-            return null;
-        }
-
-        private Node convertNeo4jNodeIntoNode(object neo4jNode)
-        {
-            return null;
         }
     }
 }

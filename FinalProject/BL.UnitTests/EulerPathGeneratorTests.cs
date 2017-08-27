@@ -89,7 +89,7 @@ namespace BL.UnitTests
 
             List<List<DFS_Code>> actualLists = generator.Generate(graph);
 
-            Assert.AreEqual("[0 2 3],[4 2 4],[5 4 5],[2 5 6],[2 3 2],[3 1 1],[1 0 0]", string.Join(",", actualLists[2]));
+            Assert.AreEqual("[0 2 3],[4 2 3],[5 4 5],[2 5 6],[2 3 2],[3 1 1],[1 0 0]", string.Join(",", actualLists[2]));
         }
     }
 }

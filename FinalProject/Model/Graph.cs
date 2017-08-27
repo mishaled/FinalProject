@@ -24,6 +24,39 @@ namespace Model
             this.id = id;
         }
 
+        public void AddNode(int nodeId, int label)
+        {
+            nodes.Add(new Node()
+            {
+                id = nodeId,
+                label = label,
+                graphId = id
+            });
+        }
+
+        public bool DoesNodeExist(int nodeId, int label)
+        {
+            return nodes.Exists(x => x.id == nodeId && x.label == label);
+        }
+
+        public bool DoesEdgeExist(int u, int v, int label)
+        {
+            return edges.Exists(x => x.u == u && x.v == v && x.l_w == label);
+        }
+
+        public void AddEdge(int u, int v, int label)
+        {
+            edges.Add(new DFS_Code()
+            {
+                u = u,
+                v = v,
+                l_u = nodes.First(x => x.id == u).label,
+                l_v = nodes.First(x => x.id == v).label,
+                l_w = label,
+                GraphID = id
+            });
+        }
+
         public int Size
         {
             get { return edges.Count; }

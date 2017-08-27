@@ -50,26 +50,19 @@ namespace DAL
 
         private static void addEdgeToGraph(string line, Graph G)
         {
-            DFS_Code code = new DFS_Code();
-            code.u = int.Parse(line.Split()[1]);
-            code.v = int.Parse(line.Split()[2]);
-            code.l_u = G.nodes[code.u].label;
-            code.l_v = G.nodes[code.v].label;
-            code.l_w = int.Parse(line.Split()[3]);
-            code.support = 1;
-            code.GraphID = G.id;
+            int u = int.Parse(line.Split()[1]);
+            int v = int.Parse(line.Split()[2]);
+            int label = int.Parse(line.Split()[3]);
 
-            G.edges.Add(code);
+            G.AddEdge(u, v, label);
         }
 
         private static void addNodeToGraph(string line, Graph G)
         {
-            Node node = new Node();
-            node.id = int.Parse(line.Split()[1]);
-            node.label = int.Parse(line.Split()[2]);
-            node.graphId = G.id;
+            int id = int.Parse(line.Split()[1]);
+            int label = int.Parse(line.Split()[2]);
 
-            G.nodes.Add(node);
+            G.AddNode(id, label);
         }
 
         private static Graph createGraph(List<Graph> D, string line)

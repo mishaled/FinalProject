@@ -14,5 +14,6 @@ namespace DAL
         void WriteWholeGraph(Graph graph);
         void WriteWholeGraphs(List<Graph> graphs);
         Graph GetGraphById(int id);
+        void BatchWriteWholeGraphs(List<Graph> graphs);
     }
 }

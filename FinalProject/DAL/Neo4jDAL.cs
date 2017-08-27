@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,6 +56,34 @@ namespace DAL
             {
                 WriteWholeGraph(graph);
             });
+        }
+
+        public void BatchWriteWholeGraphs(List<Graph> graphs)
+        {
+            using (ISession session = Neo4jConnectionManager.GetSession())
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        graphs.ForEach(graph =>
+                        {
+                            Stopwatch sw = Stopwatch.StartNew();
+                            transaction.Run(WRITE_WHOLE_GRAPH, new {graph});
+                            sw.Stop();
+
+                            Console.WriteLine("Took: " + sw.Elapsed + " to write graph #" + graphs.IndexOf(graph) + " to the db");
+
+                        });
+                    }
+                    catch
+                    {
+                        transaction.Failure();
+                    }
+                    
+                    transaction.Success();
+                }
+            }
         }
 
         public Graph GetGraphById(int id)

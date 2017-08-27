@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Model;
 
@@ -12,79 +13,7 @@ namespace BL.UnitTests
         [TestMethod]
         public void Generate_EulerianPathExists_ShouldReturnEulerianPaths()
         {
-            Graph graph = new Graph();
-
-            graph.nodes.Add(new Node()
-            {
-                id = 1,
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 2,
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 3,
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 4,
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 5,
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 6,
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 1,
-                v = 2,
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 2,
-                v = 4,
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 4,
-                v = 3,
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 3,
-                v = 1,
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 3,
-                v = 5,
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 5,
-                v = 6,
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 6,
-                v = 3,
-            });
+            Graph graph = MockGraphFactory.GenerateEulerianGraph();
 
             GraphPathsGenerator generator = new GraphPathsGenerator();
 
@@ -97,79 +26,13 @@ namespace BL.UnitTests
         [TestMethod]
         public void Generate_EulerianPathDoesNotExist_ShouldReturnAllPaths()
         {
-            Graph graph = new Graph();
-
-            graph.nodes.Add(new Node()
-            {
-                id = 1,
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 2,
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 3,
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 4,
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 5,
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 6,
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 1,
-                v = 2,
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 2,
-                v = 3,
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 3,
-                v = 4,
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 4,
-                v = 1,
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 3,
-                v = 5,
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 4,
-                v = 6,
-            });
+            Graph graph = MockGraphFactory.GenerateSquareGraphWithTwoLines();
 
             GraphPathsGenerator generator = new GraphPathsGenerator();
 
             List<List<DFS_Code>> actualLists = generator.Generate(graph);
 
-            Assert.AreEqual(actualLists.Count, 72);
+            Assert.AreEqual(actualLists.Count, 60);
         }
     }
 }

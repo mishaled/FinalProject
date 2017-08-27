@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DAL;
 using Model;
 using System.Collections.Generic;
+using Common;
 using Newtonsoft;
 
 namespace DAL.IntegrationTests
@@ -32,7 +33,7 @@ namespace DAL.IntegrationTests
         public void WriteWholeGraph_ShouldWriteCorrectGraphAndReadItBack()
         {
             var rand = new Random();
-            var graph = prepareMockGraph(rand.Next(1000));
+            Graph graph = MockGraphFactory.GenerateGraphWithOneEdge(10000 + rand.Next(1000));
 
             dal.WriteWholeGraph(graph);
             var graphAfterReload = dal.GetGraphById(graph.id);
@@ -44,8 +45,8 @@ namespace DAL.IntegrationTests
         public void WriteWholeGraphs_ShouldWriteCorrectGraphsAndReadThemBack()
         {
             var rand = new Random();
-            var graph1 = prepareMockGraph(rand.Next(1000));
-            var graph2 = prepareMockGraph(rand.Next(1000));
+            Graph graph1 = MockGraphFactory.GenerateGraphWithOneEdge(10000 + rand.Next(1000));
+            Graph graph2 = MockGraphFactory.GenerateGraphWithOneEdge(10000 + rand.Next(1000));
 
             dal.WriteWholeGraphs(new List<Graph>() { graph1, graph2 });
             var graph1AfterReload = dal.GetGraphById(graph1.id);
@@ -53,40 +54,6 @@ namespace DAL.IntegrationTests
 
             Assert.AreEqual(graph1, graph1AfterReload);
             Assert.AreEqual(graph2, graph2AfterReload);
-        }
-
-        private Graph prepareMockGraph(int graphId)
-        {
-            Graph graph = new Graph()
-            {
-                id = graphId
-            };
-
-            graph.nodes.Add(new Node()
-            {
-                id = 1,
-                label = 2,
-                graphId = graph.id
-            });
-
-            graph.nodes.Add(new Node()
-            {
-                id = 2,
-                label = 3,
-                graphId = graph.id
-            });
-
-            graph.edges.Add(new DFS_Code()
-            {
-                u = 1,
-                v = 2,
-                l_u = 2,
-                l_v = 3,
-                l_w = 4,
-                GraphID = graph.id
-            });
-
-            return graph;
         }
     }
 }

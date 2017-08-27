@@ -1,6 +1,4 @@
-﻿using Model;
-
-namespace Common
+﻿namespace Model
 {
     public static class MockGraphFactory
     {

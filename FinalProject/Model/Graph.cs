@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Common;
 
 namespace Model
 {
@@ -45,12 +43,12 @@ namespace Model
                 return false;
             }
 
-            if (!Enumerable.SequenceEqual(nodes, other.nodes))
+            if (!EnumerableComparer.CompareLists(nodes, other.nodes))
             {
                 return false;
             }
 
-            if (!Enumerable.SequenceEqual(edges, other.edges))
+            if (!EnumerableComparer.CompareLists(edges, other.edges))
             {
                 return false;
             }

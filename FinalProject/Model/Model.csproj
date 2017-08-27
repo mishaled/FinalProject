@@ -43,9 +43,16 @@
     <Compile Include="DFS_Code.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="Isomorphism.cs" />
+    <Compile Include="MockGraphFactory.cs" />
     <Compile Include="Neighbor.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{12ff3b43-f2b3-4c37-a80b-7bd3ee758ee8}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

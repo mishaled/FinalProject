@@ -23,13 +23,14 @@ namespace DAL
 
         private const string GET_SUBGRAPH_BY_ID_STATEMENT = @"MATCH (u:Node {graphId:{graphId}})-[edge {graphId:{graphId}}]->(v:Node {graphId:{graphId}}) RETURN u.id as u_id, u.label as u_label, edge.label as l_w, v.id as v_id, v.label as v_label";
 
-        private const string LOAD_FROM_CSVS_COMMAND =
-            @"LOAD CSV WITH HEADERS FROM { nodesFilename }  AS nodeCsvLine
-            create (n:Node {id: toInt(nodeCsvLine.id), label: toInt(nodeCsvLine.label), graphId : toInt(nodeCsvLine.graphId)})
-            WITH nodeCsvLine
-            LOAD CSV WITH HEADERS FROM { relationshipsFilename } AS relationshipCsvLine
-            MATCH (n1:Node {graphId : toInt(relationshipCsvLine.GraphID), id : toInt(relationshipCsvLine.u)}), (n2:Node {graphId : toInt(relationshipCsvLine.GraphID), id : toInt(relationshipCsvLine.v)})
-            CREATE UNIQUE (n1)-[r:CONNECTED_TO { label: toInt(relationshipCsvLine.label), graphId : toInt(relationshipCsvLine.GraphID) }]->(n2)";
+        private const string LOAD_NODES_FROM_CSVS_COMMAND =
+                @"LOAD CSV WITH HEADERS FROM { nodesFilename }  AS nodeCsvLine
+                create (n:Node {id: toInt(nodeCsvLine.id), label: toInt(nodeCsvLine.label), graphId : toInt(nodeCsvLine.graphId)})";
+        //WITH nodeCsvLine";
+        private const string LOAD_RELATIONSHIPS_FROM_CSVS_COMMAND =
+            @"LOAD CSV WITH HEADERS FROM { relationshipsFilename } AS relationshipCsvLine
+            MATCH(n1:Node { graphId: toInt(relationshipCsvLine.GraphID), id: toInt(relationshipCsvLine.u)}), (n2:Node {graphId : toInt(relationshipCsvLine.GraphID), id : toInt(relationshipCsvLine.v)})
+            CREATE UNIQUE(n1)-[r: CONNECTED_TO { label: toInt(relationshipCsvLine.label), graphId : toInt(relationshipCsvLine.GraphID) }]->(n2)";
 
         public Neo4jDAL(string neo4jUrl, string username, string password)
         {
@@ -37,7 +38,7 @@ namespace DAL
             Neo4jConnectionManager.Initialize(neo4jUrl, username, password);
         }
 
-        public void LoadGraphsFromCsvs(string nodesFilename, string relationshipsFilename)
+        public TimeSpan LoadGraphsFromCsvs(string nodesFilename, string relationshipsFilename)
         {
             string importFolderPath = @"C:\Users\misha\Documents\Neo4j\default.graphdb\import";
 
@@ -52,10 +53,23 @@ namespace DAL
             var nodesFileNameLocal = "file:///" + nodesFile.Name;
             var relationshipsFilenameLocal = "file:///" + relationshipsFile.Name;
 
+            Stopwatch sw = Stopwatch.StartNew();
             using (ISession session = Neo4jConnectionManager.GetSession())
             {
-                session.Run(LOAD_FROM_CSVS_COMMAND, new { nodesFilename = nodesFileNameLocal, relationshipsFilename = relationshipsFilenameLocal });
+                session.Run(LOAD_NODES_FROM_CSVS_COMMAND, new { nodesFilename = nodesFileNameLocal });
             }
+
+            using (ISession session = Neo4jConnectionManager.GetSession())
+            {
+                session.Run(LOAD_RELATIONSHIPS_FROM_CSVS_COMMAND, new { relationshipsFilename = relationshipsFilenameLocal });
+            }
+            sw.Stop();
+
+
+            File.Delete(nodesFilename);
+            File.Delete(relationshipsFilename);
+
+            return sw.Elapsed;
 
             //File.Delete(newNodesFilepath);
             //File.Delete(newRelationshipsFilepath);

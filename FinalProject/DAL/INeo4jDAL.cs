@@ -15,5 +15,6 @@ namespace DAL
         void WriteWholeGraphs(List<Graph> graphs);
         Graph GetGraphById(int id);
         void BatchWriteWholeGraphs(List<Graph> graphs);
+        TimeSpan LoadGraphsFromCsvs(string nodesFilename, string relationshipsFilename);
     }
 }

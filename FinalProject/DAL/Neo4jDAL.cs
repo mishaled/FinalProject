@@ -71,11 +71,10 @@ namespace DAL
 
             File.Delete(nodesFilename);
             File.Delete(relationshipsFilename);
+            File.Delete(newNodesFilepath);
+            File.Delete(newRelationshipsFilepath);
 
             return sw.Elapsed;
-
-            //File.Delete(newNodesFilepath);
-            //File.Delete(newRelationshipsFilepath);
         }
 
         public void DeleteGraphById(int graphId)

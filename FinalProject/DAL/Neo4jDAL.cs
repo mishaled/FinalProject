@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,12 +21,44 @@ namespace DAL
             MATCH (n1:Node {graphId : edge.GraphID, id : edge.u}), (n2:Node {graphId : edge.GraphID, id : edge.v})
             CREATE UNIQUE (n1)-[r:CONNECTED_TO { label: edge.l_w, graphId : edge.GraphID }]->(n2) return n1.id as u, n2.id as v";
 
-        private const string GET_SUBGRAPH_BY_ID_STATEMENT = @"MATCH (u {graphId:{graphId}})-[edge {graphId:{graphId}}]->(v {graphId:{graphId}}) RETURN u.id as u_id, u.label as u_label, edge.label as l_w, v.id as v_id, v.label as v_label";
+        private const string GET_SUBGRAPH_BY_ID_STATEMENT = @"MATCH (u:Node {graphId:{graphId}})-[edge {graphId:{graphId}}]->(v:Node {graphId:{graphId}}) RETURN u.id as u_id, u.label as u_label, edge.label as l_w, v.id as v_id, v.label as v_label";
+
+        private const string LOAD_FROM_CSVS_COMMAND =
+            @"LOAD CSV WITH HEADERS FROM { nodesFilename }  AS nodeCsvLine
+            create (n:Node {id: toInt(nodeCsvLine.id), label: toInt(nodeCsvLine.label), graphId : toInt(nodeCsvLine.graphId)})
+            WITH nodeCsvLine
+            LOAD CSV WITH HEADERS FROM { relationshipsFilename } AS relationshipCsvLine
+            MATCH (n1:Node {graphId : toInt(relationshipCsvLine.GraphID), id : toInt(relationshipCsvLine.u)}), (n2:Node {graphId : toInt(relationshipCsvLine.GraphID), id : toInt(relationshipCsvLine.v)})
+            CREATE UNIQUE (n1)-[r:CONNECTED_TO { label: toInt(relationshipCsvLine.label), graphId : toInt(relationshipCsvLine.GraphID) }]->(n2)";
 
         public Neo4jDAL(string neo4jUrl, string username, string password)
         {
             //_neo4jDriver = GraphDatabase.Driver("bolt://localhost:7687", AuthTokens.Basic("neo4j", "Aa123456"));
             Neo4jConnectionManager.Initialize(neo4jUrl, username, password);
+        }
+
+        public void LoadGraphsFromCsvs(string nodesFilename, string relationshipsFilename)
+        {
+            string importFolderPath = @"C:\Users\misha\Documents\Neo4j\default.graphdb\import";
+
+            FileInfo nodesFile = new FileInfo(nodesFilename);
+            string newNodesFilepath = Path.Combine(importFolderPath, nodesFile.Name);
+            File.Copy(nodesFile.FullName, newNodesFilepath, true);
+
+            FileInfo relationshipsFile = new FileInfo(relationshipsFilename);
+            string newRelationshipsFilepath = Path.Combine(importFolderPath, relationshipsFile.Name);
+            File.Copy(relationshipsFile.FullName, newRelationshipsFilepath, true);
+
+            var nodesFileNameLocal = "file:///" + nodesFile.Name;
+            var relationshipsFilenameLocal = "file:///" + relationshipsFile.Name;
+
+            using (ISession session = Neo4jConnectionManager.GetSession())
+            {
+                session.Run(LOAD_FROM_CSVS_COMMAND, new { nodesFilename = nodesFileNameLocal, relationshipsFilename = relationshipsFilenameLocal });
+            }
+
+            //File.Delete(newNodesFilepath);
+            //File.Delete(newRelationshipsFilepath);
         }
 
         public List<int> GetMatchingGraphsIds(List<DFS_Code> path)
@@ -69,7 +102,7 @@ namespace DAL
                         graphs.ForEach(graph =>
                         {
                             Stopwatch sw = Stopwatch.StartNew();
-                            transaction.Run(WRITE_WHOLE_GRAPH, new {graph});
+                            transaction.Run(WRITE_WHOLE_GRAPH, new { graph });
                             sw.Stop();
 
                             Console.WriteLine("Took: " + sw.Elapsed + " to write graph #" + graphs.IndexOf(graph) + " to the db");
@@ -80,7 +113,7 @@ namespace DAL
                     {
                         transaction.Failure();
                     }
-                    
+
                     transaction.Success();
                 }
             }

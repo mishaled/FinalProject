@@ -30,7 +30,7 @@ namespace DAL
 
                     foreach (DFS_Code edge in graph.edges)
                     {
-                        relationshipsSw.WriteLine($"{edge.u},{edge.v},{edge.l_w}, {edge.GraphID}");
+                        relationshipsSw.WriteLine($"{edge.u},{edge.v},{edge.l_w},{edge.GraphID}");
                     }
                 }
             }

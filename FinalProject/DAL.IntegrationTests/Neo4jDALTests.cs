@@ -55,5 +55,20 @@ namespace DAL.IntegrationTests
             Assert.AreEqual(graph1, graph1AfterReload);
             Assert.AreEqual(graph2, graph2AfterReload);
         }
+
+        [TestMethod]
+        public void LoadGraphsFromCsvs_ShouldWriteCorrectGraphAndReadItBack()
+        {
+            var rand = new Random();
+            Graph graph = MockGraphFactory.GenerateGraphWithOneEdge(10000 + rand.Next(1000));
+
+            var writer = new GraphDatabaseCsvWriter();
+            var files = writer.Write(new List<Graph>() { graph });
+
+            dal.LoadGraphsFromCsvs(files.Item1, files.Item2);
+            var graphAfterReload = dal.GetGraphById(graph.id);
+
+            Assert.AreEqual(graph, graphAfterReload);
+        }
     }
 }

@@ -15,19 +15,21 @@ namespace DAL.IntegrationTests
         private const string USERNAME = "neo4j";
         private const string PASSROWD = "Aa123456";
         private Neo4jDAL dal;
+        private List<Graph> graphsToCleanup;
 
         [TestInitialize]
         public void TestInitialize()
         {
             dal = new Neo4jDAL(NEO4J_URL, USERNAME, PASSROWD);
+            graphsToCleanup = new List<Graph>();
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
+            graphsToCleanup.ForEach(x => dal.DeleteGraphById(x.id));
             dal = null;
         }
-
 
         [TestMethod]
         public void WriteWholeGraph_ShouldWriteCorrectGraphAndReadItBack()
@@ -36,6 +38,9 @@ namespace DAL.IntegrationTests
             Graph graph = MockGraphFactory.GenerateGraphWithOneEdge(10000 + rand.Next(1000));
 
             dal.WriteWholeGraph(graph);
+
+            graphsToCleanup.Add(graph);
+
             var graphAfterReload = dal.GetGraphById(graph.id);
 
             Assert.AreEqual(graph, graphAfterReload);
@@ -49,6 +54,10 @@ namespace DAL.IntegrationTests
             Graph graph2 = MockGraphFactory.GenerateGraphWithOneEdge(10000 + rand.Next(1000));
 
             dal.WriteWholeGraphs(new List<Graph>() { graph1, graph2 });
+
+            graphsToCleanup.Add(graph1);
+            graphsToCleanup.Add(graph2);
+
             var graph1AfterReload = dal.GetGraphById(graph1.id);
             var graph2AfterReload = dal.GetGraphById(graph2.id);
 
@@ -64,6 +73,8 @@ namespace DAL.IntegrationTests
 
             var writer = new GraphDatabaseCsvWriter();
             var files = writer.Write(new List<Graph>() { graph });
+
+            graphsToCleanup.Add(graph);
 
             dal.LoadGraphsFromCsvs(files.Item1, files.Item2);
             var graphAfterReload = dal.GetGraphById(graph.id);

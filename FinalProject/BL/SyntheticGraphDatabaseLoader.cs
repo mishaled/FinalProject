@@ -18,19 +18,29 @@ namespace BL
             this.filename = filename;
         }
 
-        public List<Graph> Load()
+        public List<Graph> Load(int? maxNumOfGraphs = null)
         {
             SyntheticGraphDatabaseReader reader = new SyntheticGraphDatabaseReader();
             List<Graph> graphs = reader.Read(filename);
 
             GraphDatabaseCsvWriter csvWriter = new GraphDatabaseCsvWriter();
-            var partList = graphs.Take(200).ToList();
-            Tuple<string, string> files = csvWriter.Write(partList);
+
+            List<Graph> graphsToWrite = new List<Graph>();
+            if (maxNumOfGraphs != null)
+            {
+                graphsToWrite = graphs.Take(maxNumOfGraphs.Value).ToList();
+            }
+            else
+            {
+                graphsToWrite = graphs;
+            }
+
+            Tuple<string, string> files = csvWriter.Write(graphsToWrite);
 
             INeo4jDAL dal = DIFactory.Resolve<INeo4jDAL>();
             var elapsed = dal.LoadGraphsFromCsvs(files.Item1, files.Item2);
 
-            return partList;
+            return graphsToWrite;
         }
     }
 }

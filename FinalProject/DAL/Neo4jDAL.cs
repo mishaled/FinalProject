@@ -12,6 +12,9 @@ namespace DAL
 {
     public class Neo4jDAL : INeo4jDAL
     {
+        private const string DELETE_GRAPH_COMMAND =
+            @"match (n {graphId : { graphId }}) detach delete n";
+
         private const string WRITE_WHOLE_GRAPH =
             @"WITH {graph} as graph
             unwind graph.nodes as node
@@ -30,7 +33,7 @@ namespace DAL
         private const string LOAD_RELATIONSHIPS_FROM_CSVS_COMMAND =
             @"LOAD CSV WITH HEADERS FROM { relationshipsFilename } AS relationshipCsvLine
             MATCH(n1:Node { graphId: toInt(relationshipCsvLine.GraphID), id: toInt(relationshipCsvLine.u)}), (n2:Node {graphId : toInt(relationshipCsvLine.GraphID), id : toInt(relationshipCsvLine.v)})
-            CREATE UNIQUE(n1)-[r: CONNECTED_TO { label: toInt(relationshipCsvLine.label), graphId : toInt(relationshipCsvLine.GraphID) }]->(n2)";
+            CREATE (n1)-[r: CONNECTED_TO { label: toInt(relationshipCsvLine.label), graphId : toInt(relationshipCsvLine.GraphID) }]->(n2)";
 
         public Neo4jDAL(string neo4jUrl, string username, string password)
         {
@@ -75,18 +78,25 @@ namespace DAL
             //File.Delete(newRelationshipsFilepath);
         }
 
+        public void DeleteGraphById(int graphId)
+        {
+            using (ISession session = Neo4jConnectionManager.GetSession())
+            {
+                session.Run(DELETE_GRAPH_COMMAND, new { graphId });
+            }
+        }
+
         public List<int> GetMatchingGraphsIds(List<DFS_Code> path)
         {
             EdgePathToCypherQueryConverter converter = new EdgePathToCypherQueryConverter();
-            var neo4jQuery = converter.Convert(path);
-            neo4jQuery = "match (n1:Node {id:3})-[:CONNECTED_TO]-(n2:Node {id:0}) return DISTINCT n1.graphId";
+            string neo4jQuery = converter.Convert(path);
 
             using (ISession session = Neo4jConnectionManager.GetSession())
             {
                 var t = session.Run(neo4jQuery);
             }
 
-            return null;
+            throw new NotImplementedException();
         }
 
         public void WriteWholeGraph(Graph graph)

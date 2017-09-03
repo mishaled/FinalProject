@@ -11,7 +11,8 @@ namespace BL
     {
         public bool IsSubgraphIsomorphic(Graph subgraph, Graph supergraph)
         {
-            return GenerateIsomorphismMappings(subgraph.edges, supergraph).Any();
+            return GenerateIsomorphismMappings(subgraph.edges, supergraph)
+                .Any();
         }
 
         public List<Isomorphism> GenerateIsomorphismMappings(List<DFS_Code> C, Graph G)

@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EulerPathGenerator.cs" />
+    <Compile Include="FrequentFeatureSelector.cs" />
     <Compile Include="GraphPathsGenerator.cs" />
     <Compile Include="PathFinder.cs" />
     <Compile Include="PatternMatcher.cs" />

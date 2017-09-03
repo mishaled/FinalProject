@@ -37,7 +37,6 @@ namespace BL.UnitTests
         public void TestInitialize()
         {
             graphsToCleanup = new List<Graph>();
-
         }
 
         [TestCleanup]

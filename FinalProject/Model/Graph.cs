@@ -17,6 +17,25 @@ namespace Model
             edges = new List<DFS_Code>();
         }
 
+        public Graph(List<DFS_Code> edges)
+        {
+            nodes = new List<Node>();
+            this.edges = edges;
+
+            foreach (DFS_Code edge in edges)
+            {
+                if (!DoesNodeExist(edge.u, edge.l_u))
+                {
+                    AddNode(edge.u,edge.l_u);
+                }
+
+                if (!DoesNodeExist(edge.v, edge.l_v))
+                {
+                    AddNode(edge.v, edge.l_v);
+                }
+            }
+        }
+
         public Graph(int id)
         {
             nodes = new List<Node>();

@@ -54,6 +54,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="EulerPathGeneratorTests.cs" />
+    <Compile Include="FrequentFeatureSelectorTests.cs" />
     <Compile Include="GraphPathsGeneratorTests.cs" />
     <Compile Include="PatternMatcherTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

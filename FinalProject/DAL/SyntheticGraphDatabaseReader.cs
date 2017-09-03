@@ -15,7 +15,7 @@ namespace DAL
 
         }
 
-        public List<Graph> Read(string filename)
+        public List<Graph> Read(string filename, int? numOfGraphs = null)
         {
             List<Graph> D = new List<Graph>();
             string line = "";
@@ -44,8 +44,17 @@ namespace DAL
                     }
                 }
             }
+            List<Graph> graphsToReturn;
+            if (numOfGraphs != null)
+            {
+                graphsToReturn = D.Take(numOfGraphs.Value).ToList();
+            }
+            else
+            {
+                graphsToReturn = D;
+            }
 
-            return D;
+            return graphsToReturn;
         }
 
         private static void addEdgeToGraph(string line, Graph G)

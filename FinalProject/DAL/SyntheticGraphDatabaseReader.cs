@@ -44,6 +44,9 @@ namespace DAL
                     }
                 }
             }
+
+            D.OrderBy(x => x.id);
+
             List<Graph> graphsToReturn;
             if (numOfGraphs != null)
             {

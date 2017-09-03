@@ -19,7 +19,8 @@ namespace BL.UnitTests
         }
 
         [TestMethod]
-        public void Select_ShouldGenerateCorrectNumberOfFeatures()
+        [Ignore]
+        public void Select_WholeSyntheticDb_ShouldGenerateCorrectNumberOfFeatures()
         {
             string currentDir = System.AppDomain.CurrentDomain.BaseDirectory;
             string filename = string.Format("{0}Resources\\TestDataSet.data", Path.GetFullPath(Path.Combine(currentDir, @"..\..\")));
@@ -30,7 +31,22 @@ namespace BL.UnitTests
             FrequentFeatureSelector selector = new FrequentFeatureSelector();
             List<Graph> ff = selector.Select(graphs, 0.5);
 
-            Assert.AreEqual(27, ff.Count);
+            Assert.AreEqual(31, ff.Count);
+        }
+
+        [TestMethod]
+        public void Select_PartOfSyntheticDb_ShouldGenerateCorrectNumberOfFeatures()
+        {
+            string currentDir = System.AppDomain.CurrentDomain.BaseDirectory;
+            string filename = string.Format("{0}Resources\\TestDataSet.data", Path.GetFullPath(Path.Combine(currentDir, @"..\..\")));
+
+            SyntheticGraphDatabaseReader reader = new SyntheticGraphDatabaseReader();
+            var graphs = reader.Read(filename,100);
+
+            FrequentFeatureSelector selector = new FrequentFeatureSelector();
+            List<Graph> ff = selector.Select(graphs, 0.5);
+
+            Assert.AreEqual(25, ff.Count);
         }
     }
 }

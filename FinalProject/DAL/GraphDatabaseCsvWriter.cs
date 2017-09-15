@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 using Model;
 
 namespace DAL
@@ -34,6 +35,8 @@ namespace DAL
                     }
                 }
             }
+
+            DIFactory.Resolve<ILogger>().WriteInfo("Finished writing csv to db");
 
             return new Tuple<string, string>(nodesFileName, relationshipsFileName);
         }

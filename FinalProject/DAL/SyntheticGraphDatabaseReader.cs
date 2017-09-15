@@ -5,16 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 
 namespace DAL
 {
     public class SyntheticGraphDatabaseReader
     {
-        public SyntheticGraphDatabaseReader()
-        {
-
-        }
-
         public List<Graph> Read(string filename, int? numOfGraphs = null)
         {
             List<Graph> D = new List<Graph>();
@@ -56,6 +52,8 @@ namespace DAL
             {
                 graphsToReturn = D;
             }
+
+            DIFactory.Resolve<ILogger>().WriteInfo("Finished reading: " + graphsToReturn.Count + " synth graphs");
 
             return graphsToReturn;
         }

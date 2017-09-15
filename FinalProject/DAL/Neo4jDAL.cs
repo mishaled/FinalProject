@@ -6,8 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Common;
 using Neo4j.Driver.V1;
 using Model;
+using ILogger = Common.ILogger;
 
 namespace DAL
 {
@@ -15,6 +17,9 @@ namespace DAL
     {
         private const string DELETE_GRAPH_COMMAND =
             @"match (n {graphId : { graphId }}) detach delete n";
+
+        private const string CLEAN_DB_COMMAND =
+            @"match (n) detach delete n";
 
         private const string WRITE_WHOLE_GRAPH =
             @"WITH {graph} as graph
@@ -109,6 +114,21 @@ namespace DAL
             using (ISession session = Neo4jConnectionManager.GetSession())
             {
                 session.Run(DELETE_GRAPH_COMMAND, new { graphId });
+
+                DIFactory
+                    .Resolve<ILogger>()
+                    .WriteInfo("Finished deleting graph: " + graphId);
+            }
+        }
+        public void CleanDb()
+        {
+            using (ISession session = Neo4jConnectionManager.GetSession())
+            {
+                session.Run(CLEAN_DB_COMMAND);
+
+                DIFactory
+                    .Resolve<ILogger>()
+                    .WriteInfo("Finished cleaning DB");
             }
         }
 
@@ -129,6 +149,10 @@ namespace DAL
                 }
             }
 
+            DIFactory
+                .Resolve<ILogger>()
+                .WriteInfo("Finished getting matching graph ids");
+
             return ids;
         }
 
@@ -137,15 +161,16 @@ namespace DAL
             using (ISession session = Neo4jConnectionManager.GetSession())
             {
                 session.Run(WRITE_WHOLE_GRAPH, new { graph = graph });
+
+                DIFactory
+                    .Resolve<ILogger>()
+                    .WriteInfo("Finished writing whole graph to DB: "+ graph.id);
             }
         }
 
         public void WriteWholeGraphs(List<Graph> graphs)
         {
-            graphs.ForEach(graph =>
-            {
-                WriteWholeGraph(graph);
-            });
+            graphs.ForEach(WriteWholeGraph);
         }
 
         public void BatchWriteWholeGraphs(List<Graph> graphs)
@@ -162,8 +187,9 @@ namespace DAL
                             transaction.Run(WRITE_WHOLE_GRAPH, new { graph });
                             sw.Stop();
 
-                            Console.WriteLine("Took: " + sw.Elapsed + " to write graph #" + graphs.IndexOf(graph) + " to the db");
-
+                            DIFactory
+                                .Resolve<ILogger>()
+                                .WriteInfo("Took: " + sw.Elapsed + " to write graph #" + graphs.IndexOf(graph) + " to the db");
                         });
                     }
                     catch
@@ -181,6 +207,11 @@ namespace DAL
             using (ISession session = Neo4jConnectionManager.GetSession())
             {
                 var results = session.Run(GET_SUBGRAPH_BY_ID_STATEMENT, new { graphId = id });
+
+                DIFactory
+                    .Resolve<ILogger>()
+                    .WriteInfo("Finished getting graph by id: " + id);
+
                 return convertNeo4jResultIntoGraph(results, id);
             }
         }

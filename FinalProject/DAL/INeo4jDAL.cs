@@ -11,6 +11,7 @@ namespace DAL
     public interface INeo4jDAL
     {
         void DeleteGraphById(int graphId);
+        void CleanDb();
         List<int> GetMatchingGraphsIds(List<DFS_Code> path);
         void WriteWholeGraph(Graph graph);
         void WriteWholeGraphs(List<Graph> graphs);

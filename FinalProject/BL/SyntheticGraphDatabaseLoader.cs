@@ -13,7 +13,7 @@ namespace BL
     {
         private readonly string filename;
 
-        public SyntheticGraphDatabaseLoader(string filename)
+        public SyntheticGraphDatabaseLoader(string filename = null)
         {
             this.filename = filename;
         }
@@ -41,6 +41,18 @@ namespace BL
             var elapsed = dal.LoadGraphsFromCsvs(files.Item1, files.Item2);
 
             return graphsToWrite;
+        }
+
+        public List<Graph> Load(List<Graph> graphsDb)
+        {
+            GraphDatabaseCsvWriter csvWriter = new GraphDatabaseCsvWriter();
+
+            Tuple<string, string> files = csvWriter.Write(graphsDb);
+
+            INeo4jDAL dal = DIFactory.Resolve<INeo4jDAL>();
+            dal.LoadGraphsFromCsvs(files.Item1, files.Item2);
+
+            return graphsDb;
         }
     }
 }

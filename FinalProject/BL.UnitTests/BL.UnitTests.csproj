@@ -53,6 +53,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AssemblyInitializer.cs" />
     <Compile Include="EulerPathGeneratorTests.cs" />
     <Compile Include="FrequentFeatureSelectorTests.cs" />
     <Compile Include="GIndexTests.cs" />

@@ -57,6 +57,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AssemblyInitializer.cs" />
     <Compile Include="EdgePathToCypherQueryConverterTests.cs" />
     <Compile Include="GraphDatabaseCsvWriterTests.cs" />
     <Compile Include="Neo4jDALTests.cs" />

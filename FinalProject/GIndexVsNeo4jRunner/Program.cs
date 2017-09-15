@@ -61,17 +61,25 @@ namespace GIndexVsNeo4jRunner
             ResultsCsvWriter writer = new ResultsCsvWriter();
             PatternMatcher patternMatcher = new PatternMatcher();
 
-            foreach (var query in queries)
+            foreach (Graph query in queries)
             {
-                Stopwatch neo4jStopWatch = Stopwatch.StartNew();
-                List<Graph> neo4jResult = patternMatcher.Match(query);
-                neo4jStopWatch.Stop();
+                try
+                {
+                    Stopwatch neo4jStopWatch = Stopwatch.StartNew();
+                    List<Graph> neo4jResult = patternMatcher.Match(query);
+                    neo4jStopWatch.Stop();
 
-                Stopwatch gIndexStopWatch = Stopwatch.StartNew();
-                List<Graph> gIndexResult = gIndex.Search(query, graphDb);
-                gIndexStopWatch.Stop();
+                    Stopwatch gIndexStopWatch = Stopwatch.StartNew();
+                    List<Graph> gIndexResult = gIndex.Search(query, graphDb);
+                    gIndexStopWatch.Stop();
 
-                writer.WriteResult(neo4jStopWatch, gIndexStopWatch, neo4jResult.Count, gIndexResult.Count);
+                    writer.WriteResult(neo4jStopWatch, gIndexStopWatch, neo4jResult.Count, gIndexResult.Count);
+                }
+                catch (Exception e)
+                {
+                    DIFactory.Resolve<ILogger>().WriteError(e);
+                }
+
             }
         }
 

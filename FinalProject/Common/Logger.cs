@@ -49,9 +49,9 @@ namespace Common
             _nLogger.Warn(msg);
         }
 
-        public void WriteError(string msg)
+        public void WriteError(Exception ex, string msg = null)
         {
-            _nLogger.Error(msg);
+            _nLogger.Error(ex, msg);
         }
     }
 }

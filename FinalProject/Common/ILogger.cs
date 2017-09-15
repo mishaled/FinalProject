@@ -12,6 +12,6 @@ namespace Common
         //ILogger Instance { get; }
         void WriteInfo(string msg);
         void WriteWarning(string msg);
-        void WriteError(string msg);
+        void WriteError(Exception e, string msg = null);
     }
 }

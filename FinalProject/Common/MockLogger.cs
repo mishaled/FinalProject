@@ -18,7 +18,7 @@ namespace Common
             //throw new NotImplementedException();
         }
 
-        public void WriteError(string msg)
+        public void WriteError(Exception e, string msg = null)
         {
             //throw new NotImplementedException();
         }

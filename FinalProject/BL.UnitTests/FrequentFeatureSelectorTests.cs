@@ -65,7 +65,7 @@ namespace BL.UnitTests
             {
                 if (subGraph.Size > 0)
                 {
-                 Assert.IsTrue(ff[subGraph].Any());
+                    Assert.IsTrue(ff[subGraph].Any());
                 }
 
                 foreach (var key in ff[subGraph])
@@ -76,6 +76,17 @@ namespace BL.UnitTests
                     Assert.IsTrue(isIsomorphic);
                 }
             }
+        }
+
+        [TestMethod]
+        public void CompoteCanonicalLabel_ShouldSucceed()
+        {
+            Graph graph = MockGraphFactory.GenerateSquareGraph();
+
+            FrequentFeatureSelector selector = new FrequentFeatureSelector();
+            List<DFS_Code> canonicalLabel = selector.ComputeCanonicalLabel(graph);
+
+            Assert.AreEqual("[1 0 0],[2 1 1],[3 2 2],[0 3 3]", String.Join(",", canonicalLabel));
         }
     }
 }

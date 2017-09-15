@@ -41,6 +41,7 @@ namespace Model
             nodes = new List<Node>();
             edges = new List<DFS_Code>();
             this.id = id;
+            support = 1;
         }
 
         public void AddNode(int nodeId, int label)

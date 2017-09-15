@@ -18,6 +18,42 @@ namespace BL
             return frequentFeatures;
         }
 
+        public List<DFS_Code> ComputeCanonicalLabel(Graph graph)
+        {
+            List<DFS_Code> C = new List<DFS_Code>();
+            List<List<DFS_Code>> labelCandidates = ComputeCanonicalLabelCandidatesRecurse(C, graph);
+
+            List<DFS_Code> maxLabel = labelCandidates
+                .OrderByDescending(x => string.Join(",", x))
+                .First();
+
+            return maxLabel;
+        }
+
+        private List<List<DFS_Code>> ComputeCanonicalLabelCandidatesRecurse(List<DFS_Code> C, Graph graph)
+        {
+            List<int> graphIds = new List<int>();
+            List<Graph> D = new List<Graph>() { graph };
+            List<DFS_Code> extensions = RightMostPath_Extensions(C, D, graphIds); // get extensions of graph G(C)
+
+            foreach (DFS_Code t in extensions)
+            {
+                // deep copy (clone) C to C1
+                List<DFS_Code> C1 = new List<DFS_Code>(C);
+                C1.Add(t); // generate a new graph by adding an extension to the old graph                           
+
+                if (t.support >= 1 && IsCanonical(C1, t.support)) // support of the new graph is support of extension t
+                {
+                    var labelCandidates = ComputeCanonicalLabelCandidatesRecurse(C1, graph);
+                    labelCandidates.Add(C1);
+
+                    return labelCandidates;
+                }
+            }
+
+            return new List<List<DFS_Code>>() { C };
+        }
+
         private Dictionary<Graph, List<int>> gSpan(List<DFS_Code> C, List<Graph> D, double minSup)
         {
             List<int> graphIds = new List<int>();
@@ -33,13 +69,23 @@ namespace BL
                 {
                     Graph graph = new Graph(C);
                     Dictionary<Graph, List<int>> graphs = gSpan(C1, D, minSup);
-                    graphs.Add(graph, graphIds);
+
+                    if (graphIds.Any())
+                    {
+                        graphs.Add(graph, graphIds);
+                    }
 
                     return graphs;
                 }
             }
 
-            return new Dictionary<Graph, List<int>>();
+            Dictionary<Graph, List<int>> dict = new Dictionary<Graph, List<int>>();
+
+            Graph fullGraph = new Graph(C);
+            dict.Add(fullGraph, graphIds);
+
+            return dict;
+            //return new Dictionary<Graph, List<int>>() { C };
         }
 
         private List<DFS_Code> RightMostPath_Extensions(List<DFS_Code> C, List<Graph> D, List<int> graphIds = null)
@@ -120,20 +166,32 @@ namespace BL
             }
         }
 
-        private void HandleRightmostPathNonRootNode(List<DFS_Code> C, List<int> graphIds, Graph G, Node ur, List<Node> R, List<DFS_Code> extensions)
+        private void HandleRightmostPathNonRootNode(
+            List<DFS_Code> C,
+            List<int> graphIds,
+            Graph G,
+            Node ur,
+            List<Node> R,
+            List<DFS_Code> extensions)
         {
             SubgraphIsomorphismGenerator generator = new SubgraphIsomorphismGenerator();
             List<Isomorphism> iso = generator.GenerateIsomorphismMappings(C, G);
 
-            if (iso.Any())
+            if (!iso.Any())
             {
-                graphIds?.Add(G.id);
+                return;
             }
 
+            if (graphIds != null && !graphIds.Contains(G.id))
+            {
+                graphIds.Add(G.id);
+            }
+
+            int previousExtenstionCount = extensions.Count;
             foreach (Isomorphism o in iso)
             {
                 // backward extensions from the rightmost child
-                Node node_ur = new Node() {id = o.map[ur.id], label = ur.label}; // node ur in G
+                Node node_ur = new Node() { id = o.map[ur.id], label = ur.label }; // node ur in G
                 foreach (Neighbor x in getNeighbors(node_ur, G))
                 {
                     GenerateBackwardExtention(C, G, ur, R, extensions, o, x);
@@ -145,11 +203,16 @@ namespace BL
                     GenerateForwardExtention(G, ur, extensions, o, u);
                 }
             }
+
+            if (extensions.Count == previousExtenstionCount)
+            {
+                //extensions.Add(new DFS_Code(C));
+            }
         }
 
         private void GenerateForwardExtention(Graph G, Node ur, List<DFS_Code> extensions, Isomorphism o, Node u)
         {
-            Node node_u = new Node() {id = o.map[u.id], label = u.label}; // node u in G
+            Node node_u = new Node() { id = o.map[u.id], label = u.label }; // node u in G
             foreach (Neighbor x in getNeighbors(node_u, G))
             {
                 // node v is a mapping of node x in C
@@ -239,7 +302,7 @@ namespace BL
                 }
 
                 // NEW CODE
-                f = new DFS_Code() {u = 0, v = 1, l_u = dfs.l_v, l_v = dfs.l_u, l_w = dfs.l_w, support = 1, GraphID = G.id};
+                f = new DFS_Code() { u = 0, v = 1, l_u = dfs.l_v, l_v = dfs.l_u, l_w = dfs.l_w, support = 1, GraphID = G.id };
                 if (!extensions.Contains(f)) // extensions do not contain f yet!
                 {
                     extensions.Add(f);
@@ -249,33 +312,19 @@ namespace BL
 
         private bool IsCanonical(List<DFS_Code> C, int support)
         {
-            Graph GC = new Graph(); // graph corresponding to code C
-            GC.id = -1;
-            GC.support = support;
-            GC.nodes = new List<Node>();
-            GC.edges = new List<DFS_Code>(C);
-            foreach (DFS_Code code in C)
+            Graph GC = new Graph(C)
             {
-                Node node_u = new Node() { id = code.u, label = code.l_u };
-                if (!GC.nodes.Contains(node_u))
-                {
-                    GC.nodes.Add(node_u);
-                }
-                Node node_v = new Node() { id = code.v, label = code.l_v };
-                if (!GC.nodes.Contains(node_v))
-                {
-                    GC.nodes.Add(node_v);
-                }
-            }
+                support = support
+            };
 
-            List<Graph> DC = new List<Graph>();
-            DC.Add(GC);
+            // graph corresponding to code C
+            List<Graph> DC = new List<Graph> { GC };
 
             List<DFS_Code> C1 = new List<DFS_Code>(); // initialize canonical DFS code
             foreach (DFS_Code t in C)
             {
                 List<DFS_Code> extensions = RightMostPath_Extensions(C1, DC); // extensions of C1
-                // get least righmost edge extension of C1
+                                                                              // get least righmost edge extension of C1
                 DFS_Code s = extensions[0];
                 if (s.LessThan(t))
                 {
@@ -290,7 +339,7 @@ namespace BL
         {
             List<Node> nodes = new List<Node>(); // result
             List<Node> rmp = new List<Node>(); // rightmost path
-            // create an empty rightmost path
+                                               // create an empty rightmost path
             for (int i = 0; i < C.Count(); i++)
             {
                 rmp.Add(new Node());

@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AlgoLib">
+      <HintPath>..\..\..\trie\AlgoLib\AlgoLib\bin\Debug\AlgoLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,6 +45,7 @@
   <ItemGroup>
     <Compile Include="EulerPathGenerator.cs" />
     <Compile Include="FrequentFeatureSelector.cs" />
+    <Compile Include="GIndex.cs" />
     <Compile Include="GraphPathsGenerator.cs" />
     <Compile Include="PathFinder.cs" />
     <Compile Include="PatternMatcher.cs" />

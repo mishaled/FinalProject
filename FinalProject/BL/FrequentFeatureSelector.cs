@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 
 namespace BL
 {
@@ -73,6 +74,8 @@ namespace BL
                     if (graphIds.Any())
                     {
                         graphs.Add(graph, graphIds);
+                        DIFactory.Resolve<ILogger>()
+                            .WriteInfo("Found frequent feature: #" + graphs.Count + 1);
                     }
 
                     return graphs;

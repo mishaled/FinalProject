@@ -2,40 +2,42 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using AlgoLib;
 using Model;
+using VDS.Common.Tries;
 
 namespace BL
 {
-    public class GIndex : IDisposable
+    public class GIndex// : IDisposable
     {
         private double _minSup;
-        private Trie<string> _trie;
+        //private Trie<string> _trie;
+        private StringTrie<string> _trie;
+        
 
         public GIndex(double minSup)
         {
             _minSup = minSup;
-            _trie = new Trie<string>();
+            _trie = new StringTrie<string>();
         }
 
-        ~GIndex()
-        {
-            Dispose(false);
-        }
+        //~GIndex()
+        //{
+        //    Dispose(false);
+        //}
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        //public void Dispose()
+        //{
+        //    Dispose(true);
+        //    GC.SuppressFinalize(this);
+        //}
 
-        private void Dispose(bool disposing)
-        {
-            foreach (var value in _trie.Values)
-            {
-                File.Delete(value);
-            }
-        }
+        //private void Dispose(bool disposing)
+        //{
+        //    foreach (var value in _trie.)
+        //    {
+        //        File.Delete(value);
+        //    }
+        //}
 
         public void Fill(List<Graph> graphDb)
         {

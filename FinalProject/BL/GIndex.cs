@@ -12,32 +12,33 @@ namespace BL
         private double _minSup;
         //private Trie<string> _trie;
         private StringTrie<string> _trie;
-        
+        private List<string> _filesForCleanup;
 
         public GIndex(double minSup)
         {
             _minSup = minSup;
             _trie = new StringTrie<string>();
+            _filesForCleanup = new List<string>();
         }
 
-        //~GIndex()
-        //{
-        //    Dispose(false);
-        //}
+        ~GIndex()
+        {
+            Dispose(false);
+        }
 
-        //public void Dispose()
-        //{
-        //    Dispose(true);
-        //    GC.SuppressFinalize(this);
-        //}
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-        //private void Dispose(bool disposing)
-        //{
-        //    foreach (var value in _trie.)
-        //    {
-        //        File.Delete(value);
-        //    }
-        //}
+        private void Dispose(bool disposing)
+        {
+            foreach (string file in _filesForCleanup)
+            {
+                File.Delete(file);
+            }
+        }
 
         public void Fill(List<Graph> graphDb)
         {
@@ -61,6 +62,8 @@ namespace BL
             {
                 sw.WriteLine(value);
             }
+
+            _filesForCleanup.Add(filename);
 
             if (!_trie.ContainsKey(ff.Key.ToString()))
             {

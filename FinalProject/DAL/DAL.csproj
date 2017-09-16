@@ -51,6 +51,7 @@
     <Compile Include="Neo4jDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SyntheticGraphDatabaseReader.cs" />
+    <Compile Include="SyntheticGraphDatabaseWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

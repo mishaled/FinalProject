@@ -29,6 +29,7 @@ namespace GIndexVsNeo4jRunner
                 .Resolve<ILogger>()
                 .WriteInfo("Neo4j found: " + neo4jResultsNum + " in :" + neo4jWatch.Elapsed + ", and gIndex found: " + gIndexResultsNum + " in: " + gIndexWatch.Elapsed);
             _sw.WriteLine(string.Format("{0},{1},{2},{3};", neo4jWatch.Elapsed, neo4jResultsNum, gIndexWatch.Elapsed, gIndexResultsNum));
+            _sw.Flush();
         }
     }
 }

@@ -65,7 +65,13 @@ namespace BL
 
         private static List<T> IntersectNonEmpty<T>(IEnumerable<IEnumerable<T>> lists)
         {
-            IEnumerable<IEnumerable<T>> nonEmptyLists = lists.Where(l => l.Any());
+            List<IEnumerable<T>> nonEmptyLists = lists.Where(l => l.Any()).ToList();
+
+            if (!nonEmptyLists.Any())
+            {
+                return new List<T>();
+            }
+
             return nonEmptyLists.Aggregate((l1, l2) => l1.Intersect(l2)).ToList();
         }
     }

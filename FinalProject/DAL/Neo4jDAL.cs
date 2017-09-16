@@ -151,7 +151,7 @@ namespace DAL
 
             DIFactory
                 .Resolve<ILogger>()
-                .WriteInfo("Finished getting matching graph ids");
+                .WriteInfo("Finished getting matching graph ids: " + string.Join(",", ids));
 
             return ids;
         }
@@ -164,7 +164,7 @@ namespace DAL
 
                 DIFactory
                     .Resolve<ILogger>()
-                    .WriteInfo("Finished writing whole graph to DB: "+ graph.id);
+                    .WriteInfo("Finished writing whole graph to DB: " + graph.id);
             }
         }
 

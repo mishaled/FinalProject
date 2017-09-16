@@ -10,7 +10,7 @@ using Model;
 namespace BL.UnitTests
 {
     [TestClass]
-    public class PatternMatcherTests
+    public class PatternMatcherIntegrationTests
     {
         private TestContext testContextInstance;
         public TestContext TestContext

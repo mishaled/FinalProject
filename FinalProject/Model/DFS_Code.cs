@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Model
 {
+    [Serializable]
     public class DFS_Code
     {
         public int u { get; set; } // vertex u

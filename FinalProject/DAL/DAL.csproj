@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EdgePathToCypherQueryConverter.cs" />
+    <Compile Include="FrequentFeaturesFileDal.cs" />
     <Compile Include="GraphDatabaseCsvWriter.cs" />
     <Compile Include="INeo4jDAL.cs" />
     <Compile Include="Neo4jConnectionManager.cs" />

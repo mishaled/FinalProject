@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Common;
 
 namespace Model
 {
+    [Serializable]
     public class Graph
     {
         public int id { get; set; }

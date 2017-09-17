@@ -39,14 +39,13 @@ namespace FrequentFeaturesFileWriter
 
             logger.WriteInfo("Finish selecting FF");
 
-            string queriesFileName = string.Format("{0}__{1}__{2}.data", graphsDb.Count, minSup.ToString().Replace(".","_"), Guid.NewGuid());
+            //string queriesFileName = string.Format("{0}__{1}__{2}.data", graphsDb.Count, minSup.ToString().Replace(".","_"), Guid.NewGuid());
 
-            logger.WriteInfo("Start writing FF to file: " + queriesFileName);
+            logger.WriteInfo("Start writing FF to file");
 
-            SyntheticGraphDatabaseWriter writer = new SyntheticGraphDatabaseWriter();
-            writer.Write(queriesFileName, features.Keys.ToList());
+            var filename = FrequentFeaturesFileDal.Write(features, graphDbFilename, minSup);
 
-            logger.WriteInfo("Finish writing FF to file: " + queriesFileName);
+            logger.WriteInfo("Finish writing FF to file: " + filename);
 
             Console.Read();
         }

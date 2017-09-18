@@ -14,20 +14,23 @@ namespace DAL
     {
         public static string Write(Dictionary<Graph, List<int>> frequentFeatures, string originalFileName, double minSup)
         {
-            string ffFileName = string.Format("{0}__{1}__{2}.data", originalFileName.Replace(".", "_"),
+            FileInfo originalFileInfo = new FileInfo(originalFileName);
+            string ffFileName = string.Format("{0}__{1}__{2}.data", originalFileInfo.Name.Replace(".", "_"),
                 minSup.ToString().Replace(".", "_"), Guid.NewGuid());
 
-            DIFactory.Resolve<ILogger>().WriteInfo("Start writing FF to file: " + ffFileName);
+            string ffFilePath = Path.Combine(originalFileInfo.DirectoryName, ffFileName);
+
+            DIFactory.Resolve<ILogger>().WriteInfo("Start writing FF to file: " + ffFilePath);
 
             BinaryFormatter serializer = new BinaryFormatter();
-            using (Stream stream = File.Open(ffFileName, FileMode.Create))
+            using (Stream stream = File.Open(ffFilePath, FileMode.Create))
             {
                 serializer.Serialize(stream, frequentFeatures);
             }
 
-            DIFactory.Resolve<ILogger>().WriteInfo("Finish writing FF to file: " + ffFileName);
+            DIFactory.Resolve<ILogger>().WriteInfo("Finish writing FF to file: " + ffFilePath);
 
-            return ffFileName;
+            return ffFilePath;
         }
 
         public static Dictionary<Graph, List<int>> Read(string ffFileName)

@@ -21,12 +21,14 @@ namespace BL
             // map vertex 0 in C to vertex x in G if label(0)=label(x)
             foreach (Node node in G.nodes)
             {
-                if (node.label == C[0].l_u)
+                if (node.label != C[0].l_u)
                 {
-                    Isomorphism o = new Isomorphism() { map = new Dictionary<int, int>() };
-                    o.map.Add(0, node.id);
-                    iso.Add(o);
+                    continue;
                 }
+
+                Isomorphism o = new Isomorphism() { map = new Dictionary<int, int>() };
+                o.map.Add(0, node.id);
+                iso.Add(o);
             }
 
             foreach (DFS_Code t in C)
@@ -41,14 +43,16 @@ namespace BL
                     {
                         foreach (Neighbor x in neighbors_node_u)
                         {
-                            if (!o.map.ContainsValue(x.id) && x.label == t.l_v && x.edge == t.l_w)
+                            if (o.map.ContainsValue(x.id) || x.label != t.l_v || x.edge != t.l_w)
                             {
-                                // copy o to o1
-                                Isomorphism o1 = new Isomorphism() { map = new Dictionary<int, int>(o.map) };
-                                o1.map.Add(t.v, x.id);
-                                // add o1 to iso1
-                                iso1.Add(o1);
+                                continue;
                             }
+
+                            // copy o to o1
+                            Isomorphism o1 = new Isomorphism() { map = new Dictionary<int, int>(o.map) };
+                            o1.map.Add(t.v, x.id);
+                            // add o1 to iso1
+                            iso1.Add(o1);
                         }
                     }
                     else // backward edge
@@ -71,6 +75,7 @@ namespace BL
                         }
                     }
                 }
+
                 // replace iso by iso1                
                 iso.Clear();
                 iso.AddRange(iso1);

@@ -43,7 +43,7 @@ namespace DAL.IntegrationTests
             features.Add(new Graph(), new List<int>() { 1 });
             var filename = FrequentFeaturesFileDal.Write(features, "harta.data", 0.1);
 
-            Assert.IsTrue(filename.StartsWith("harta_data__0_1__"));
+            Assert.IsTrue(filename.Contains(@"\harta_data__0_1__"));
         }
 
         public string ToAssertableString(Dictionary<Graph, List<int>> dictionary)

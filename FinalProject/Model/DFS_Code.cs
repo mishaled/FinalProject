@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Model
 {
     [Serializable]
-    public class DFS_Code
+    public class DFS_Code : IComparable
     {
         public int u { get; set; } // vertex u
         public int v { get; set; } // vertex v
@@ -67,6 +67,21 @@ namespace Model
         {
             return u.GetHashCode() + v.GetHashCode() + l_u.GetHashCode() + l_v.GetHashCode() + l_w.GetHashCode() +
                    GraphID.GetHashCode() + support.GetHashCode();
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (this.LessThan((DFS_Code)obj))
+            {
+                return -1;
+            }
+
+            if (this.Equals(obj))
+            {
+                return 0;
+            }
+
+            return 1;
         }
 
         public bool LessThan(DFS_Code other)

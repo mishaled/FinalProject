@@ -61,7 +61,7 @@ namespace BL.UnitTests
             FrequentFeatureSelector selector = new FrequentFeatureSelector();
             Dictionary<Graph, List<int>> ff = selector.Select(graphs, 0.5);
 
-            foreach (var subGraph in ff.Keys)
+            foreach (Graph subGraph in ff.Keys)
             {
                 if (subGraph.Size > 0)
                 {
@@ -70,9 +70,9 @@ namespace BL.UnitTests
 
                 foreach (var key in ff[subGraph])
                 {
-                    var superGraph = graphs.First(x => x.id == key);
+                    Graph superGraph = graphs.First(x => x.id == key);
                     SubgraphIsomorphismGenerator gen = new SubgraphIsomorphismGenerator();
-                    var isIsomorphic = gen.IsSubgraphIsomorphic(subGraph, superGraph);
+                    bool isIsomorphic = gen.IsSubgraphIsomorphic(subGraph, superGraph);
                     Assert.IsTrue(isIsomorphic);
                 }
             }

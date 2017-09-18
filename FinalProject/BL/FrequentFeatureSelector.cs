@@ -57,14 +57,17 @@ namespace BL
 
         private Dictionary<Graph, List<int>> gSpan(List<DFS_Code> C, List<Graph> D, double minSup)
         {
-            DIFactory.Resolve<ILogger>()
-                .WriteInfo("Start gSpan for minSup: " + minSup);
-
             List<int> graphIds = new List<int>();
             List<DFS_Code> extensions = RightMostPath_Extensions(C, D, graphIds); // get extensions of graph G(C)
 
-            DIFactory.Resolve<ILogger>()
-                .WriteInfo("Found RightmostPath for minSup:  " + minSup);
+            Dictionary<Graph, List<int>> dict = new Dictionary<Graph, List<int>>();
+
+            if (graphIds.Any())
+            {
+                Graph fullGraph = new Graph(C);
+                dict.Add(fullGraph, graphIds);
+                DIFactory.Resolve<ILogger>().WriteInfo("Found frequent feature");
+            }
 
             foreach (DFS_Code t in extensions)
             {
@@ -74,27 +77,12 @@ namespace BL
 
                 if (t.support >= minSup && IsCanonical(C1, t.support)) // support of the new graph is support of extension t
                 {
-                    Graph graph = new Graph(C);
                     Dictionary<Graph, List<int>> graphs = gSpan(C1, D, minSup);
-
-                    if (graphIds.Any())
-                    {
-                        graphs.Add(graph, graphIds);
-                        DIFactory.Resolve<ILogger>()
-                            .WriteInfo("Found frequent feature: #" + graphs.Count + 1);
-                    }
-
-                    return graphs;
+                    dict = dict.Union(graphs).ToDictionary(x => x.Key, y => y.Value);
                 }
             }
 
-            Dictionary<Graph, List<int>> dict = new Dictionary<Graph, List<int>>();
-
-            Graph fullGraph = new Graph(C);
-            dict.Add(fullGraph, graphIds);
-
             return dict;
-            //return new Dictionary<Graph, List<int>>() { C };
         }
 
         private List<DFS_Code> RightMostPath_Extensions(List<DFS_Code> C, List<Graph> D, List<int> graphIds = null)
@@ -130,20 +118,22 @@ namespace BL
 
         private static void SortTuplesInRightmostPath(List<DFS_Code> extensions)
         {
-            for (int i = 0; i < extensions.Count() - 1; i++)
-            {
-                for (int j = i + 1; j < extensions.Count(); j++)
-                {
-                    if (extensions[j].LessThan(extensions[i]))
-                    {
-                        DFS_Code code = extensions[i];
-                        extensions[i] = extensions[j];
-                        extensions[j] = code;
-                    }
-                }
-            }
+            extensions.Sort();
+            //for (int i = 0; i < extensions.Count() - 1; i++)
+            //{
+            //    for (int j = i + 1; j < extensions.Count(); j++)
+            //    {
+            //        if (extensions[j].LessThan(extensions[i]))
+            //        {
+            //            DFS_Code code = extensions[i];
+            //            extensions[i] = extensions[j];
+            //            extensions[j] = code;
+            //        }
+            //    }
+            //}
         }
 
+        //private static List<DFS_Code> RemoveDuplicateTuples(List<DFS_Code> extensions)
         private static void RemoveDuplicateTuples(List<DFS_Code> extensions)
         {
             for (int i = 0; i < extensions.Count() - 1; i++)
@@ -196,7 +186,6 @@ namespace BL
                 graphIds.Add(G.id);
             }
 
-            int previousExtenstionCount = extensions.Count;
             foreach (Isomorphism o in iso)
             {
                 // backward extensions from the rightmost child
@@ -211,11 +200,6 @@ namespace BL
                 {
                     GenerateForwardExtention(G, ur, extensions, o, u);
                 }
-            }
-
-            if (extensions.Count == previousExtenstionCount)
-            {
-                //extensions.Add(new DFS_Code(C));
             }
         }
 
@@ -311,10 +295,19 @@ namespace BL
                 }
 
                 // NEW CODE
-                f = new DFS_Code() { u = 0, v = 1, l_u = dfs.l_v, l_v = dfs.l_u, l_w = dfs.l_w, support = 1, GraphID = G.id };
-                if (!extensions.Contains(f)) // extensions do not contain f yet!
+                DFS_Code fReversed = new DFS_Code()
                 {
-                    extensions.Add(f);
+                    u = 0,
+                    v = 1,
+                    l_u = dfs.l_v,
+                    l_v = dfs.l_u,
+                    l_w = dfs.l_w,
+                    support = 1,
+                    GraphID = G.id
+                };
+                if (!extensions.Contains(fReversed)) // extensions do not contain f yet!
+                {
+                    extensions.Add(fReversed);
                 }
             }
         }
@@ -333,7 +326,7 @@ namespace BL
             foreach (DFS_Code t in C)
             {
                 List<DFS_Code> extensions = RightMostPath_Extensions(C1, DC); // extensions of C1
-                                                                              // get least righmost edge extension of C1
+                // get least righmost edge extension of C1
                 DFS_Code s = extensions[0];
                 if (s.LessThan(t))
                 {
@@ -348,7 +341,7 @@ namespace BL
         {
             List<Node> nodes = new List<Node>(); // result
             List<Node> rmp = new List<Node>(); // rightmost path
-                                               // create an empty rightmost path
+            // create an empty rightmost path
             for (int i = 0; i < C.Count(); i++)
             {
                 rmp.Add(new Node());

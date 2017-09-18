@@ -74,37 +74,8 @@ namespace DAL
             }
             sw.Stop();
 
-
             File.Delete(nodesFilename);
             File.Delete(relationshipsFilename);
-            //Task.Factory.StartNew(() =>
-            //{
-            //    for (int numTries = 0; numTries < 10; numTries++)
-            //    {
-            //        try
-            //        {
-            //            File.Delete(newNodesFilepath);
-            //        }
-            //        catch (IOException)
-            //        {
-            //            Thread.Sleep(50);
-            //        }
-            //    }
-            //});
-            //Task.Factory.StartNew(() =>
-            //{
-            //    for (int numTries = 0; numTries < 10; numTries++)
-            //    {
-            //        try
-            //        {
-            //            File.Delete(newRelationshipsFilepath);
-            //        }
-            //        catch (IOException)
-            //        {
-            //            Thread.Sleep(50);
-            //        }
-            //    }
-            //});
 
             return sw.Elapsed;
         }
@@ -144,7 +115,7 @@ namespace DAL
             {
                 IStatementResult results = session.Run(neo4jQuery);
 
-                foreach (var record in results)
+                foreach (IRecord record in results)
                 {
                     ids.Add(int.Parse(record["graphId"].ToString()));
                 }
@@ -154,7 +125,9 @@ namespace DAL
                 .Resolve<ILogger>()
                 .WriteInfo("Finished getting matching graph ids: " + string.Join(",", ids));
 
-            return ids;
+            return ids
+                .Distinct()
+                .ToList();
         }
 
         public void WriteWholeGraph(Graph graph)

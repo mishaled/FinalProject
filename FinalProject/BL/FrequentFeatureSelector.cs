@@ -57,8 +57,14 @@ namespace BL
 
         private Dictionary<Graph, List<int>> gSpan(List<DFS_Code> C, List<Graph> D, double minSup)
         {
+            DIFactory.Resolve<ILogger>()
+                .WriteInfo("Start gSpan for minSup: " + minSup);
+
             List<int> graphIds = new List<int>();
             List<DFS_Code> extensions = RightMostPath_Extensions(C, D, graphIds); // get extensions of graph G(C)
+
+            DIFactory.Resolve<ILogger>()
+                .WriteInfo("Found RightmostPath for minSup:  " + minSup);
 
             foreach (DFS_Code t in extensions)
             {

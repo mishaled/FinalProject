@@ -13,26 +13,6 @@ namespace Common
     public class Logger : ILogger
     {
         private static NLog.Logger _nLogger;
-        //private static Logger _logger;
-        //private static object _lock = new object();
-        //public static ILogger Instance
-        //{
-        //    get
-        //    {
-        //        if (_logger == null)
-        //        {
-        //            lock (_lock)
-        //            {
-        //                if (_logger == null)
-        //                {
-        //                    _logger = new Logger();
-        //                }
-        //            }
-        //        }
-
-        //        return _logger;
-        //    }
-        //}
 
         public Logger()
         {
@@ -42,16 +22,19 @@ namespace Common
         public void WriteInfo(string msg)
         {
             _nLogger.Info(msg);
+            LogManager.Flush();
         }
 
         public void WriteWarning(string msg)
         {
             _nLogger.Warn(msg);
+            LogManager.Flush();
         }
 
         public void WriteError(Exception ex, string msg = null)
         {
             _nLogger.Error(ex, msg);
+            LogManager.Flush();
         }
     }
 }

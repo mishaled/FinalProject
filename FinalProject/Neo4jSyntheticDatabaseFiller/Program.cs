@@ -17,25 +17,28 @@ namespace Neo4jSyntheticDatabaseFiller
         static void Main(string[] args)
         {
             RegisterDal();
+            RegisterLogger();
+            var logger = DIFactory.Resolve<ILogger>();
 
-            Console.WriteLine("Start");
+            logger.WriteInfo("Start");
 
             if (args.Length == 0)
             {
                 return;
             }
 
-            Console.WriteLine("Start reading synth graphs");
+            logger.WriteInfo("Start reading synth graphs");
 
+            DIFactory.Resolve<INeo4jDAL>().CleanDb();
             SyntheticGraphDatabaseLoader reader = new SyntheticGraphDatabaseLoader(args[0]);
 
             var sw = Stopwatch.StartNew();
             List<Graph> graphs = reader.Load();
             sw.Stop();
 
-            Console.WriteLine("Took: " + sw.Elapsed + " to write #" + graphs.Count + " graphs to the db");
+            logger.WriteInfo("Took: " + sw.Elapsed + " to write #" + graphs.Count + " graphs to the db");
 
-            Console.WriteLine("Finished");
+            logger.WriteInfo("Finished");
 
             Console.Read();
         }
@@ -47,6 +50,12 @@ namespace Neo4jSyntheticDatabaseFiller
             string neo4jPassword = ConfigurationManager.AppSettings.Get("Neo4jPassword");
             Neo4jDAL dal = new Neo4jDAL(neo4jUrl, neo4jUsername, neo4jPassword);
             DIFactory.Register<INeo4jDAL>(dal);
+        }
+
+        private static void RegisterLogger()
+        {
+            ILogger logger = new Logger();
+            DIFactory.Register(logger);
         }
     }
 }

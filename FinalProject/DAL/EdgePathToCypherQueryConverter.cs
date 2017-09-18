@@ -29,10 +29,12 @@ namespace DAL
 
                 if (index == 0)
                 {
-                    query += string.Format("match(n{0}:Node {{ id: {1}, label: {2}}})",index, order.Item1, order.Item2);
+                    //query += string.Format("match(n{0}:Node {{ id: {1}, label: {2}}})",index, order.Item1, order.Item2);
+                    query += string.Format("match(n{0}:Node {{ label: {1}}})", index, order.Item2);
                 }
 
-                query += string.Format("-[:CONNECTED_TO {{label: {0} }}]-(n{1} {{id: {2}, label: {3}}})", edge.l_w, index + 1, order.Item3, order.Item4);
+                //query += string.Format("-[:CONNECTED_TO {{label: {0} }}]-(n{1} {{id: {2}, label: {3}}})", edge.l_w, index + 1, order.Item3, order.Item4);
+                query += string.Format("-[:CONNECTED_TO {{ label: {0} }}]-(n{1} {{ label: {2}}})", edge.l_w, index + 1, order.Item4);
             }
 
             query += " return DISTINCT n0.graphId as graphId";

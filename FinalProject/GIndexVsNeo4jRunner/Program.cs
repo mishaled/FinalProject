@@ -16,20 +16,25 @@ namespace GIndexVsNeo4jRunner
     {
         static void Main(string[] args)
         {
-            if (args.Length < 3)
+            if (args.Length < 4)
             {
                 throw new Exception("Not enough arguments");
             }
 
             string graphDbFilename = args[0];
-            string queriesFilename = args[1];
-            double minSup = double.Parse(args[2]);
+            string frequentFeaturesFilename = args[1];
+            string queriesFilename = args[2];
+            int minSupPercent = int.Parse(args[3]);
 
             RegisterLogger();
             var logger = DIFactory.Resolve<ILogger>();
 
             List<Graph> graphsDb = LoadGraphsFromSynthDb(graphDbFilename);
-            List<Graph> queries = LoadGraphsFromSynthDb(queriesFilename);
+            Dictionary<Graph, List<int>> ff = LoadFrequentFeaturesFromFile(frequentFeaturesFilename);
+            List<Graph> queries = LoadFrequentFeaturesFromFile(queriesFilename).Keys.ToList();
+
+            double numberOfGraphsForMinSup = (double)(minSupPercent * graphsDb.Count) / 100;
+            int minSup = (int)Math.Round(numberOfGraphsForMinSup);
 
             RegisterDal();
             DIFactory
@@ -41,7 +46,7 @@ namespace GIndexVsNeo4jRunner
             logger.WriteInfo("Loading Neo4j took: " + sw.Elapsed);
 
             sw.Restart();
-            GIndex gIndex = BuildGIndex(graphsDb, minSup);
+            GIndex gIndex = BuildGIndex(ff, minSup);
             sw.Stop();
             logger.WriteInfo("Building gIndex took: " + sw.Elapsed);
             RunQueries(queries, gIndex, graphsDb);
@@ -55,6 +60,13 @@ namespace GIndexVsNeo4jRunner
             List<Graph> graphsDb = reader.Read(graphDbFilename);
             return graphsDb;
         }
+
+        private static Dictionary<Graph, List<int>> LoadFrequentFeaturesFromFile(string graphDbFilename)
+        {
+            Dictionary<Graph, List<int>> ff = FrequentFeaturesFileDal.Read(graphDbFilename);
+            return ff;
+        }
+
 
         private static void RunQueries(List<Graph> queries, GIndex gIndex, List<Graph> graphDb)
         {
@@ -70,7 +82,7 @@ namespace GIndexVsNeo4jRunner
                     neo4jStopWatch.Stop();
 
                     Stopwatch gIndexStopWatch = Stopwatch.StartNew();
-                    List<Graph> gIndexResult = gIndex.Search(query, graphDb);
+                    List<Graph> gIndexResult = gIndex.Search(query, graphDb, true);
                     gIndexStopWatch.Stop();
 
                     writer.WriteResult(neo4jStopWatch, gIndexStopWatch, neo4jResult.Count, gIndexResult.Count);
@@ -89,10 +101,10 @@ namespace GIndexVsNeo4jRunner
             reader.Load(graphsDb);
         }
 
-        private static GIndex BuildGIndex(List<Graph> graphsDb, double minSup)
+        private static GIndex BuildGIndex(Dictionary<Graph, List<int>> ff, int minSup)
         {
             GIndex gIndex = new GIndex(minSup);
-            gIndex.Fill(graphsDb);
+            gIndex.Fill(ff);
 
             return gIndex;
         }

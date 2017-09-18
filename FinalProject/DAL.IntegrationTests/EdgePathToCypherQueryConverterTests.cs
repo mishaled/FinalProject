@@ -42,7 +42,7 @@ namespace DAL.IntegrationTests
             var converter = new EdgePathToCypherQueryConverter();
             var query = converter.Convert(path);
 
-            Assert.AreEqual(query, "match(n0:Node { id: 1, label: 1})-[:CONNECTED_TO {label: 1 }]-(n1 {id: 2, label: 2}) return DISTINCT n0.graphId as graphId");
+            Assert.AreEqual(query, "match(n0:Node { label: 1})-[:CONNECTED_TO { label: 1 }]-(n1 { label: 2}) return DISTINCT n0.graphId as graphId");
         }
 
         [TestMethod]
@@ -70,7 +70,7 @@ namespace DAL.IntegrationTests
             var converter = new EdgePathToCypherQueryConverter();
             var query = converter.Convert(path);
 
-            Assert.AreEqual(query, "match(n0:Node { id: 1, label: 1})-[:CONNECTED_TO {label: 1 }]-(n1 {id: 2, label: 2})-[:CONNECTED_TO {label: 2 }]-(n2 {id: 3, label: 3}) return DISTINCT n0.graphId as graphId");
+            Assert.AreEqual(query, "match(n0:Node { label: 1})-[:CONNECTED_TO { label: 1 }]-(n1 { label: 2})-[:CONNECTED_TO { label: 2 }]-(n2 { label: 3}) return DISTINCT n0.graphId as graphId");
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace DAL.IntegrationTests
                 l_u = 2,
                 v = 1,
                 l_v = 1,
-                l_w=1
+                l_w = 1
             });
 
             path.Add(new DFS_Code()
@@ -98,7 +98,7 @@ namespace DAL.IntegrationTests
             var converter = new EdgePathToCypherQueryConverter();
             var query = converter.Convert(path);
 
-            Assert.AreEqual(query, "match(n0:Node { id: 1, label: 1})-[:CONNECTED_TO {label: 1 }]-(n1 {id: 2, label: 2})-[:CONNECTED_TO {label: 2 }]-(n2 {id: 3, label: 3}) return DISTINCT n0.graphId as graphId");
+            Assert.AreEqual(query, "match(n0:Node { label: 1})-[:CONNECTED_TO { label: 1 }]-(n1 { label: 2})-[:CONNECTED_TO { label: 2 }]-(n2 { label: 3}) return DISTINCT n0.graphId as graphId");
         }
 
         [TestMethod]
@@ -126,7 +126,7 @@ namespace DAL.IntegrationTests
             var converter = new EdgePathToCypherQueryConverter();
             var query = converter.Convert(path);
 
-            Assert.AreEqual(query, "match(n0:Node { id: 1, label: 1})-[:CONNECTED_TO {label: 1 }]-(n1 {id: 2, label: 2})-[:CONNECTED_TO {label: 2 }]-(n2 {id: 3, label: 3}) return DISTINCT n0.graphId as graphId");
+            Assert.AreEqual(query, "match(n0:Node { label: 1})-[:CONNECTED_TO { label: 1 }]-(n1 { label: 2})-[:CONNECTED_TO { label: 2 }]-(n2 { label: 3}) return DISTINCT n0.graphId as graphId");
         }
 
         [TestMethod]
@@ -139,7 +139,7 @@ namespace DAL.IntegrationTests
                 l_u = 2,
                 v = 1,
                 l_v = 1,
-                l_w=1
+                l_w = 1
             });
 
             path.Add(new DFS_Code()
@@ -154,7 +154,7 @@ namespace DAL.IntegrationTests
             var converter = new EdgePathToCypherQueryConverter();
             var query = converter.Convert(path);
 
-            Assert.AreEqual(query, "match(n0:Node { id: 1, label: 1})-[:CONNECTED_TO {label: 1 }]-(n1 {id: 2, label: 2})-[:CONNECTED_TO {label: 2 }]-(n2 {id: 3, label: 3}) return DISTINCT n0.graphId as graphId");
+            Assert.AreEqual(query, "match(n0:Node { label: 1})-[:CONNECTED_TO { label: 1 }]-(n1 { label: 2})-[:CONNECTED_TO { label: 2 }]-(n2 { label: 3}) return DISTINCT n0.graphId as graphId");
         }
     }
 }

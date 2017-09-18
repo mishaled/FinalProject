@@ -47,14 +47,16 @@ namespace BL
 
             GraphPathsGenerator graphPathsGenerator = new GraphPathsGenerator();
             var paths = graphPathsGenerator.Generate(query);
-            List<List<int>> idsLists = new List<List<int>>();
+            List<int> idsList = new List<int>();
 
             foreach (var path in paths)
             {
-                idsLists.Add(dal.GetMatchingGraphsIds(path));
+                idsList.AddRange(dal.GetMatchingGraphsIds(path));
             }
 
-            return IntersectNonEmpty(idsLists);
+            return idsList;
+
+            //return UnionNonEmpty(idsLists);
         }
 
         public bool Verify(Graph match, Graph query)
@@ -63,7 +65,7 @@ namespace BL
             return generator.IsSubgraphIsomorphic(query, match);
         }
 
-        private static List<T> IntersectNonEmpty<T>(IEnumerable<IEnumerable<T>> lists)
+        private static List<T> UnionNonEmpty<T>(IEnumerable<IEnumerable<T>> lists)
         {
             List<IEnumerable<T>> nonEmptyLists = lists.Where(l => l.Any()).ToList();
 
@@ -72,7 +74,7 @@ namespace BL
                 return new List<T>();
             }
 
-            return nonEmptyLists.Aggregate((l1, l2) => l1.Intersect(l2)).ToList();
+            return nonEmptyLists.Aggregate((l1, l2) => l1.Union(l2)).ToList();
         }
     }
 }

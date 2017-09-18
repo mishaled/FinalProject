@@ -33,7 +33,7 @@ namespace DAL
         private const string GET_SUBGRAPH_BY_ID_STATEMENT = @"MATCH (u:Node {graphId:{graphId}})-[edge {graphId:{graphId}}]->(v:Node {graphId:{graphId}}) RETURN u.id as u_id, u.label as u_label, edge.label as l_w, v.id as v_id, v.label as v_label";
 
         private const string LOAD_NODES_FROM_CSVS_COMMAND =
-                @"LOAD CSV WITH HEADERS FROM { nodesFilename }  AS nodeCsvLine
+            @"LOAD CSV WITH HEADERS FROM { nodesFilename }  AS nodeCsvLine
                 create (n:Node {id: toInt(nodeCsvLine.id), label: toInt(nodeCsvLine.label), graphId : toInt(nodeCsvLine.graphId)})";
         //WITH nodeCsvLine";
         private const string LOAD_RELATIONSHIPS_FROM_CSVS_COMMAND =
@@ -120,6 +120,7 @@ namespace DAL
                     .WriteInfo("Finished deleting graph: " + graphId);
             }
         }
+
         public void CleanDb()
         {
             using (ISession session = Neo4jConnectionManager.GetSession())

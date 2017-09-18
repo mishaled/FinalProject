@@ -9,12 +9,12 @@ namespace BL
 {
     public class GIndex// : IDisposable
     {
-        private double _minSup;
+        private readonly int _minSup;
         //private Trie<string> _trie;
         private StringTrie<string> _trie;
         private List<string> _filesForCleanup;
 
-        public GIndex(double minSup)
+        public GIndex(int minSup)
         {
             _minSup = minSup;
             _trie = new StringTrie<string>();
@@ -45,6 +45,11 @@ namespace BL
             FrequentFeatureSelector ffSelector = new FrequentFeatureSelector();
             Dictionary<Graph, List<int>> frequentFeaturesMap = ffSelector.Select(graphDb, _minSup);
 
+            Fill(frequentFeaturesMap);
+        }
+
+        public void Fill(Dictionary<Graph, List<int>> frequentFeaturesMap)
+        {
             foreach (KeyValuePair<Graph, List<int>> ff in frequentFeaturesMap)
             {
                 GenerateFileAndInsertIntoTrie(ff);
@@ -75,23 +80,31 @@ namespace BL
             }
         }
 
-        public List<Graph> Search(Graph query, List<Graph> graphDb)
+        public List<Graph> Search(Graph query, List<Graph> graphDb, bool useIndex = true)
         {
             Dictionary<Graph, string> fragmentsToCanonicalLabelsDict = FindQueryFragments(query);
 
             List<int> idsList = new List<int>();
-            foreach (Graph key in fragmentsToCanonicalLabelsDict.Keys)
+
+            if (useIndex)
             {
-                List<int> graphIds = GetGraphIdsForFragment(fragmentsToCanonicalLabelsDict, key);
-                idsList.AddRange(graphIds);
+                foreach (Graph key in fragmentsToCanonicalLabelsDict.Keys)
+                {
+                    List<int> graphIds = GetGraphIdsForFragment(fragmentsToCanonicalLabelsDict, key);
+                    idsList.AddRange(graphIds);
+                }
+            }
+            else
+            {
+                idsList = graphDb.Select(x => x.id).ToList();
             }
 
             var isomorhpismChecker = new SubgraphIsomorphismGenerator();
             var graphs =
                 idsList
-                .Distinct()
-                .Select(x => graphDb.First(y => y.id == x))
-                .ToList();
+                    .Distinct()
+                    .Select(x => graphDb.First(y => y.id == x))
+                    .ToList();
 
             return graphs
                 .Where(x => isomorhpismChecker.IsSubgraphIsomorphic(query, x))
@@ -118,7 +131,7 @@ namespace BL
             }
 
             return
-                    ids
+                ids
                     .Split(',')
                     .Select(int.Parse)
                     .ToList();

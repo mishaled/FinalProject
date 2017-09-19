@@ -66,7 +66,6 @@ namespace BL
             {
                 Graph fullGraph = new Graph(C);
                 dict.Add(fullGraph, graphIds);
-                DIFactory.Resolve<ILogger>().WriteInfo("Found frequent feature");
             }
 
             foreach (DFS_Code t in extensions)
@@ -81,6 +80,8 @@ namespace BL
                     dict = dict.Union(graphs).ToDictionary(x => x.Key, y => y.Value);
                 }
             }
+
+            DIFactory.Resolve<ILogger>().WriteInfo("Frequent features: " + dict.Count);
 
             return dict;
         }

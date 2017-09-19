@@ -15,17 +15,13 @@ namespace FrequentFeaturesFileWriter
     {
         static void Main(string[] args)
         {
-            if (args.Length < 2)
+            if (args.Length < 1)
             {
                 throw new Exception("Not enough arguments");
             }
 
             string graphDbFilename = args[0];
-            //int minSupMin = int.Parse(args[1]);
-            //int minSupMax = int.Parse(args[2]);
-            int minSupPercent = int.Parse(args[1]);
-            int minSup = int.Parse(args[1]);
-
+            //int minSup = int.Parse(args[1]);
 
             RegisterLogger();
             ILogger logger = DIFactory.Resolve<ILogger>();
@@ -34,29 +30,18 @@ namespace FrequentFeaturesFileWriter
 
             List<Graph> graphsDb = LoadGraphsFromSynthDb(graphDbFilename);
 
-            //double numberOfGraphsForMinSup = (double)(minSupPercent * graphsDb.Count) / 100;
-            //int minSup = (int)Math.Round(numberOfGraphsForMinSup);
-
             logger.WriteInfo("Finish loading from synth DB");
 
-            //Parallel.For(minSupMin, minSupMax, (i) =>
-            //{
-            //    double minSup = (double)i / 10;
+            for (int i = 200; i < graphsDb.Count; i += 100)
+            {
+                SelectFfAndWriteToFile(logger, graphsDb, i, graphDbFilename);
+            }
 
-            //    logger.WriteInfo("Start selecting FF for minSup: " + minSup);
+            Console.Read();
+        }
 
-            //    FrequentFeatureSelector selector = new FrequentFeatureSelector();
-            //    Dictionary<Graph, List<int>> features = selector.Select(graphsDb, minSup);
-
-            //    logger.WriteInfo("Finish selecting FF for minSup: " + minSup);
-
-            //    logger.WriteInfo("Start writing FF for minSup: " + minSup + " to file");
-
-            //    string filename = FrequentFeaturesFileDal.Write(features, graphDbFilename, minSup);
-
-            //    logger.WriteInfo("Finish writing FF to file: " + filename);
-
-            //});
+        private static void SelectFfAndWriteToFile(ILogger logger, List<Graph> graphsDb, int minSup, string graphDbFilename)
+        {
             logger.WriteInfo("Start selecting FF");
             Stopwatch sw = Stopwatch.StartNew();
             FrequentFeatureSelector selector = new FrequentFeatureSelector();
@@ -64,15 +49,11 @@ namespace FrequentFeaturesFileWriter
             sw.Stop();
             logger.WriteInfo("Finish selecting FF in: " + sw.Elapsed);
 
-            //string queriesFileName = string.Format("{0}__{1}__{2}.data", graphsDb.Count, minSup.ToString().Replace(".","_"), Guid.NewGuid());
-
             logger.WriteInfo("Start writing FF to file");
 
             var filename = FrequentFeaturesFileDal.Write(features, graphDbFilename, minSup);
 
             logger.WriteInfo("Finish writing FF to file: " + filename);
-
-            Console.Read();
         }
 
         private static List<Graph> LoadGraphsFromSynthDb(string graphDbFilename)

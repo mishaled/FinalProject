@@ -13,12 +13,23 @@ namespace BL
         //private Trie<string> _trie;
         private StringTrie<string> _trie;
         private List<string> _filesForCleanup;
+        private string _gIndexDirectoryPath;
 
         public GIndex(int minSup)
         {
             _minSup = minSup;
             _trie = new StringTrie<string>();
             _filesForCleanup = new List<string>();
+
+            string basePath = System.Environment.CurrentDirectory;
+            _gIndexDirectoryPath = Path.Combine(basePath, "GIndex");
+
+            if (Directory.Exists(_gIndexDirectoryPath))
+            {
+                Directory.Delete(_gIndexDirectoryPath, true);
+            }
+
+            Directory.CreateDirectory(_gIndexDirectoryPath);
         }
 
         ~GIndex()
@@ -58,8 +69,8 @@ namespace BL
 
         private void GenerateFileAndInsertIntoTrie(KeyValuePair<Graph, List<int>> ff)
         {
-            string filename = Guid.NewGuid().ToString();
-            var ffSelector = new FrequentFeatureSelector();
+            string filename = Path.Combine(_gIndexDirectoryPath, Guid.NewGuid().ToString());
+            FrequentFeatureSelector ffSelector = new FrequentFeatureSelector();
             string key = string.Join(",", ffSelector.ComputeCanonicalLabel(ff.Key));
             string value = string.Join(",", ff.Value);
 

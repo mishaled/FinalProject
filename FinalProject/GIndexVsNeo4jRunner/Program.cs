@@ -51,6 +51,8 @@ namespace GIndexVsNeo4jRunner
             logger.WriteInfo("Building gIndex took: " + sw.Elapsed);
             RunQueries(queries, gIndex, graphsDb);
 
+            logger.WriteInfo("Done!");
+
             Console.Read();
         }
 
@@ -85,7 +87,11 @@ namespace GIndexVsNeo4jRunner
                     List<Graph> gIndexResult = gIndex.Search(query, graphDb, true);
                     gIndexStopWatch.Stop();
 
-                    writer.WriteResult(neo4jStopWatch, gIndexStopWatch, neo4jResult.Count, gIndexResult.Count);
+                    Stopwatch isomorphismStopWatch = Stopwatch.StartNew();
+                    List<Graph> isomorphismResult = gIndex.Search(query, graphDb, false);
+                    isomorphismStopWatch.Stop();
+
+                    writer.WriteResult(neo4jStopWatch, gIndexStopWatch, isomorphismStopWatch, neo4jResult.Count, gIndexResult.Count, isomorphismResult.Count);
                 }
                 catch (Exception e)
                 {

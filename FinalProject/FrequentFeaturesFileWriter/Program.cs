@@ -32,7 +32,7 @@ namespace FrequentFeaturesFileWriter
 
             logger.WriteInfo("Finish loading from synth DB");
 
-            for (int i = 200; i < graphsDb.Count; i += 100)
+            for (int i = 2000; i <= graphsDb.Count; i += 1000)
             {
                 SelectFfAndWriteToFile(logger, graphsDb, i, graphDbFilename);
             }
@@ -42,12 +42,12 @@ namespace FrequentFeaturesFileWriter
 
         private static void SelectFfAndWriteToFile(ILogger logger, List<Graph> graphsDb, int minSup, string graphDbFilename)
         {
-            logger.WriteInfo("Start selecting FF");
+            logger.WriteInfo("Start selecting FF for: " + minSup);
             Stopwatch sw = Stopwatch.StartNew();
             FrequentFeatureSelector selector = new FrequentFeatureSelector();
             Dictionary<Graph, List<int>> features = selector.Select(graphsDb, minSup);
             sw.Stop();
-            logger.WriteInfo("Finish selecting FF in: " + sw.Elapsed);
+            logger.WriteInfo("Finish selecting FF for: " + minSup + " in: " + sw.Elapsed);
 
             logger.WriteInfo("Start writing FF to file");
 

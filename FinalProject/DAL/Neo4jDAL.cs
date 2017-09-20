@@ -121,9 +121,9 @@ namespace DAL
                 }
             }
 
-            DIFactory
-                .Resolve<ILogger>()
-                .WriteInfo("Finished getting matching graph ids: " + string.Join(",", ids));
+            //DIFactory
+            //    .Resolve<ILogger>()
+            //    .WriteInfo("Finished getting matching graph ids: " + string.Join(",", ids));
 
             return ids
                 .Distinct()
@@ -182,9 +182,9 @@ namespace DAL
             {
                 var results = session.Run(GET_SUBGRAPH_BY_ID_STATEMENT, new { graphId = id });
 
-                DIFactory
-                    .Resolve<ILogger>()
-                    .WriteInfo("Finished getting graph by id: " + id);
+                //DIFactory
+                //    .Resolve<ILogger>()
+                //    .WriteInfo("Finished getting graph by id: " + id);
 
                 return convertNeo4jResultIntoGraph(results, id);
             }

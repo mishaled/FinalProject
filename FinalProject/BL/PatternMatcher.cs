@@ -54,7 +54,7 @@ namespace BL
                 idsList.AddRange(dal.GetMatchingGraphsIds(path));
             }
 
-            return idsList;
+            return idsList.Distinct().ToList();
 
             //return UnionNonEmpty(idsLists);
         }

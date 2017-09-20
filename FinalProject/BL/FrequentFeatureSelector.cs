@@ -81,7 +81,7 @@ namespace BL
                 }
             }
 
-            DIFactory.Resolve<ILogger>().WriteInfo("Frequent features: " + dict.Count);
+            //DIFactory.Resolve<ILogger>().WriteInfo("Frequent features: " + dict.Count);
 
             return dict;
         }

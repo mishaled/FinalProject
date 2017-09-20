@@ -11,12 +11,12 @@ namespace BL
     {
         public List<List<DFS_Code>> Generate(Graph graph)
         {
-            EulerPathGenerator eulerPathGenerator = new EulerPathGenerator();
+            //EulerPathGenerator eulerPathGenerator = new EulerPathGenerator();
 
-            if (eulerPathGenerator.DoesGraphContainEulerPath(graph))
-            {
-                return eulerPathGenerator.Generate(graph);
-            }
+            //if (eulerPathGenerator.DoesGraphContainEulerPath(graph))
+            //{
+            //    return eulerPathGenerator.Generate(graph);
+            //}
 
             return GenerateAllPathsUpToSizeOfGraph(graph).Select(x => x.ToList()).ToList();
         }

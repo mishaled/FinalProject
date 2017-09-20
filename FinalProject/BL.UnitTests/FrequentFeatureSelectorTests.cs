@@ -45,9 +45,9 @@ namespace BL.UnitTests
             var graphs = reader.Read(filename, 100);
 
             FrequentFeatureSelector selector = new FrequentFeatureSelector();
-            Dictionary<Graph, List<int>> ff = selector.Select(graphs, 0.5);
+            Dictionary<Graph, List<int>> ff = selector.Select(graphs, 10);
 
-            Assert.AreEqual(25, ff.Count);
+            Assert.AreEqual(89, ff.Count);
         }
         [TestMethod]
         public void Select_PartOfSyntheticDb_ShouldGenerateCorrectGraphIdsForFeatures()
@@ -59,7 +59,7 @@ namespace BL.UnitTests
             List<Graph> graphs = reader.Read(filename, 100);
 
             FrequentFeatureSelector selector = new FrequentFeatureSelector();
-            Dictionary<Graph, List<int>> ff = selector.Select(graphs, 0.5);
+            Dictionary<Graph, List<int>> ff = selector.Select(graphs, 10);
 
             foreach (Graph subGraph in ff.Keys)
             {

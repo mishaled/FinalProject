@@ -18,7 +18,9 @@ namespace BL
             //    return eulerPathGenerator.Generate(graph);
             //}
 
-            return GenerateAllPathsUpToSizeOfGraph(graph).Select(x => x.ToList()).ToList();
+            return GenerateAllPathsUpToSizeOfGraph(graph)
+                .Select(x => x.ToList())
+                .ToList();
         }
 
         private List<List<DFS_Code>> GenerateAllPathsUpToSizeOfGraph(Graph graph)
@@ -35,7 +37,7 @@ namespace BL
         private List<List<DFS_Code>> GenerateAllPathsUpToLength(Graph graph, Node startNode, int size)
         {
             var lists = new List<List<DFS_Code>>();
-            for (int i = 0; i < size; i++)
+            for (int i = 1; i <= size; i++)
             {
                 lists.AddRange(PathFinder.FindAndCast(graph, graph.edges, startNode, i));
             }

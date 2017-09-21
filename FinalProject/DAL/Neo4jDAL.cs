@@ -190,6 +190,20 @@ namespace DAL
             }
         }
 
+        //public Graph GetAllGraphIds()
+        //{
+        //    using (ISession session = Neo4jConnectionManager.GetSession())
+        //    {
+        //        var results = session.Run(GET_SUBGRAPH_BY_ID_STATEMENT, new { graphId = id });
+
+        //        //DIFactory
+        //        //    .Resolve<ILogger>()
+        //        //    .WriteInfo("Finished getting graph by id: " + id);
+
+        //        return convertNeo4jResultIntoGraph(results, id);
+        //    }
+        //}
+
         private Graph convertNeo4jResultIntoGraph(IStatementResult results, int id)
         {
             Graph graph = new Graph(id);

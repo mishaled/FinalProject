@@ -24,11 +24,15 @@ namespace BL
             List<DFS_Code> C = new List<DFS_Code>();
             List<List<DFS_Code>> labelCandidates = ComputeCanonicalLabelCandidatesRecurse(C, graph);
 
-            List<DFS_Code> maxLabel = labelCandidates
-                .OrderByDescending(x => string.Join(",", x))
-                .First();
+            //List<DFS_Code> maxLabel = labelCandidates
+            //    .OrderByDescending(x => string.Join(",", x))
+            //    .First();
 
-            return maxLabel;
+            var minLabel = labelCandidates
+                .Where(x => x.Count == graph.Size)
+                .Min();
+
+            return minLabel;
         }
 
         private List<List<DFS_Code>> ComputeCanonicalLabelCandidatesRecurse(List<DFS_Code> C, Graph graph)
@@ -36,6 +40,7 @@ namespace BL
             List<int> graphIds = new List<int>();
             List<Graph> D = new List<Graph>() { graph };
             List<DFS_Code> extensions = RightMostPath_Extensions(C, D, graphIds); // get extensions of graph G(C)
+            var candidates = new List<List<DFS_Code>>();
 
             foreach (DFS_Code t in extensions)
             {
@@ -45,14 +50,12 @@ namespace BL
 
                 if (t.support >= 1 && IsCanonical(C1, t.support)) // support of the new graph is support of extension t
                 {
-                    var labelCandidates = ComputeCanonicalLabelCandidatesRecurse(C1, graph);
-                    labelCandidates.Add(C1);
-
-                    return labelCandidates;
+                    candidates.AddRange(ComputeCanonicalLabelCandidatesRecurse(C1, graph));
+                    candidates.Add(C1);
                 }
             }
 
-            return new List<List<DFS_Code>>() { C };
+            return candidates;
         }
 
         private Dictionary<Graph, List<int>> gSpan(List<DFS_Code> C, List<Graph> D, double minSup)

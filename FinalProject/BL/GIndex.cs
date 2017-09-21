@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Common;
+using DAL;
 using Model;
 using VDS.Common.Tries;
 
@@ -114,7 +116,7 @@ namespace BL
             var graphs =
                 idsList
                     .Distinct()
-                    .Select(x => graphDb.First(y => y.id == x))
+                    .Select(x => DIFactory.Resolve<INeo4jDAL>().GetGraphById(x))
                     .ToList();
 
             return graphs
@@ -124,25 +126,29 @@ namespace BL
 
         private List<int> GetGraphIdsForFragment(Dictionary<Graph, string> fragmentsToCanonicalLabelsDict, Graph key)
         {
-            string filename;
-            if (!_trie.TryGetValue(fragmentsToCanonicalLabelsDict[key], out filename))
+            string filenames;
+            if (!_trie.TryGetValue(fragmentsToCanonicalLabelsDict[key], out filenames))
             {
                 return new List<int>();
             }
 
-            string ids;
-            using (StreamReader sr = new StreamReader(filename))
+            List<string> idsLists = new List<string>();
+
+            foreach (var filename in filenames.Split(';'))
             {
-                ids = sr.ReadLine();
+                using (StreamReader sr = new StreamReader(filename))
+                {
+                    idsLists.Add(sr.ReadLine());
+                }
             }
 
-            if (string.IsNullOrEmpty(ids))
+            if (!idsLists.Any())
             {
                 return new List<int>();
             }
 
             return
-                ids
+                string.Join(",", idsLists)
                     .Split(',')
                     .Select(int.Parse)
                     .ToList();

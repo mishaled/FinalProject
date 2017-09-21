@@ -79,7 +79,7 @@ namespace BL.UnitTests
         }
 
         [TestMethod]
-        public void CompoteCanonicalLabel_ShouldSucceed()
+        public void CompoteCanonicalLabel_SquareGraph_ShouldSucceed()
         {
             Graph graph = MockGraphFactory.GenerateSquareGraph();
 
@@ -87,6 +87,17 @@ namespace BL.UnitTests
             List<DFS_Code> canonicalLabel = selector.ComputeCanonicalLabel(graph);
 
             Assert.AreEqual("[1 0 0],[2 1 1],[3 2 2],[0 3 3]", String.Join(",", canonicalLabel));
+        }
+
+        [TestMethod]
+        public void CompoteCanonicalLabel_OneEdge_ShouldSucceed()
+        {
+            Graph graph = MockGraphFactory.GenerateGraphWithOneEdge();
+
+            FrequentFeatureSelector selector = new FrequentFeatureSelector();
+            List<DFS_Code> canonicalLabel = selector.ComputeCanonicalLabel(graph);
+
+            Assert.AreEqual("[2 1 4]", String.Join(",", canonicalLabel));
         }
     }
 }

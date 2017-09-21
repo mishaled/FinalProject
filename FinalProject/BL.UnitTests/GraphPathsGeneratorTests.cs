@@ -45,7 +45,7 @@ namespace BL.UnitTests
 
             List<List<DFS_Code>> actualLists = generator.Generate(graph);
 
-            Assert.AreEqual(72, actualLists.Count);
+            Assert.AreEqual(85, actualLists.Count);
         }
     }
 }

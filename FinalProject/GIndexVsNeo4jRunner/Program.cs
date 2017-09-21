@@ -90,8 +90,8 @@ namespace GIndexVsNeo4jRunner
                     Stopwatch isomorphismStopWatch = Stopwatch.StartNew();
                     List<Graph> isomorphismResult = gIndex.Search(query, graphDb, false);
                     isomorphismStopWatch.Stop();
-
-                    writer.WriteResult(neo4jStopWatch, gIndexStopWatch, isomorphismStopWatch, neo4jResult.Count, gIndexResult.Count, isomorphismResult.Count);
+                    
+                    writer.WriteResult(neo4jStopWatch, gIndexStopWatch, isomorphismStopWatch, neo4jResult.Count, gIndexResult.Count, isomorphismResult.Count, query);
                 }
                 catch (Exception e)
                 {

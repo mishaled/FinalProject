@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace Model
 {
@@ -34,19 +35,12 @@ namespace Model
 
         public static Graph GenerateSquareGraphWithTwoLines(int? graphId = null)
         {
-            Graph graph = generateGraphWithIdIfNeeded(graphId);
+            Graph graph = GenerateSquareGraph();
 
-            graph.AddNode(0, 0);
-            graph.AddNode(1, 1);
-            graph.AddNode(2, 2);
             graph.AddNode(3, 3);
             graph.AddNode(4, 4);
             graph.AddNode(5, 5);
 
-            graph.AddEdge(0, 1, 0);
-            graph.AddEdge(1, 2, 0);
-            graph.AddEdge(2, 3, 0);
-            graph.AddEdge(3, 1, 0);
             graph.AddEdge(2, 4, 0);
             graph.AddEdge(3, 5, 0);
 
@@ -81,6 +75,8 @@ namespace Model
             {
                 return new Graph(graphId.Value);
             }
+
+            Thread.Sleep(1000);
 
             Random rand = new Random();
             int randomID = 1000000;

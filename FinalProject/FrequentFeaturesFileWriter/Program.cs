@@ -15,13 +15,15 @@ namespace FrequentFeaturesFileWriter
     {
         static void Main(string[] args)
         {
-            if (args.Length < 1)
+            if (args.Length < 4)
             {
                 throw new Exception("Not enough arguments");
             }
 
             string graphDbFilename = args[0];
-            //int minSup = int.Parse(args[1]);
+            int initialSize = int.Parse(args[1]);
+            int jumpSize = int.Parse(args[2]);
+            int maxSize = int.Parse(args[3]);
 
             RegisterLogger();
             ILogger logger = DIFactory.Resolve<ILogger>();
@@ -32,7 +34,7 @@ namespace FrequentFeaturesFileWriter
 
             logger.WriteInfo("Finish loading from synth DB");
 
-            for (int i = 2000; i <= graphsDb.Count; i += 1000)
+            for (int i = initialSize; i <= maxSize; i += jumpSize)
             {
                 SelectFfAndWriteToFile(logger, graphsDb, i, graphDbFilename);
             }

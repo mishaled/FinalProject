@@ -21,7 +21,7 @@ namespace FrequentFeaturesFileWriter
             }
 
             string graphDbFilename = args[0];
-            int initialSize = int.Parse(args[1]);
+            int minSize = int.Parse(args[1]);
             int jumpSize = int.Parse(args[2]);
             int maxSize = int.Parse(args[3]);
 
@@ -34,7 +34,7 @@ namespace FrequentFeaturesFileWriter
 
             logger.WriteInfo("Finish loading from synth DB");
 
-            for (int i = initialSize; i <= maxSize; i += jumpSize)
+            for (int i = maxSize; i >= minSize; i -= jumpSize)
             {
                 SelectFfAndWriteToFile(logger, graphsDb, i, graphDbFilename);
             }

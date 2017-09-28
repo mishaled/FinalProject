@@ -14,7 +14,7 @@ namespace BL
         public Dictionary<Graph, List<int>> Select(List<Graph> graphDb, double minSup)
         {
             List<DFS_Code> C = new List<DFS_Code>();
-            Dictionary<Graph, List<int>> frequentFeatures = gSpan(C, graphDb, minSup);
+            Dictionary<Graph, List<int>> frequentFeatures = Mine(C, graphDb, minSup);
 
             return frequentFeatures;
         }
@@ -24,15 +24,17 @@ namespace BL
             List<DFS_Code> C = new List<DFS_Code>();
             List<List<DFS_Code>> labelCandidates = ComputeCanonicalLabelCandidatesRecurse(C, graph);
 
-            //List<DFS_Code> maxLabel = labelCandidates
-            //    .OrderByDescending(x => string.Join(",", x))
-            //    .First();
-
-            var minLabel = labelCandidates
+            labelCandidates = 
+                labelCandidates
                 .Where(x => x.Count == graph.Size)
-                .Min();
+                .ToList();
 
-            return minLabel;
+            if (!labelCandidates.Any())
+            {
+                throw new Exception("No label candidates for graph of size: " + graph.Size);
+            }
+
+            return labelCandidates.Min();
         }
 
         private List<List<DFS_Code>> ComputeCanonicalLabelCandidatesRecurse(List<DFS_Code> C, Graph graph)
@@ -58,7 +60,7 @@ namespace BL
             return candidates;
         }
 
-        private Dictionary<Graph, List<int>> gSpan(List<DFS_Code> C, List<Graph> D, double minSup)
+        private Dictionary<Graph, List<int>> Mine(List<DFS_Code> C, List<Graph> D, double minSup)
         {
             List<int> graphIds = new List<int>();
             List<DFS_Code> extensions = RightMostPath_Extensions(C, D, graphIds); // get extensions of graph G(C)
@@ -79,7 +81,7 @@ namespace BL
 
                 if (t.support >= minSup && IsCanonical(C1, t.support)) // support of the new graph is support of extension t
                 {
-                    Dictionary<Graph, List<int>> graphs = gSpan(C1, D, minSup);
+                    Dictionary<Graph, List<int>> graphs = Mine(C1, D, minSup);
                     dict = dict.Union(graphs).ToDictionary(x => x.Key, y => y.Value);
                 }
             }

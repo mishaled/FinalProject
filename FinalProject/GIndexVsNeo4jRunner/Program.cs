@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
@@ -25,13 +26,18 @@ namespace GIndexVsNeo4jRunner
             string frequentFeaturesFilename = args[1];
             string queriesFilename = args[2];
             int minSupPercent = int.Parse(args[3]);
+            int maxThreadCount = int.Parse(ConfigurationManager.AppSettings["MaxThreadCount"]);
 
             RegisterLogger();
             var logger = DIFactory.Resolve<ILogger>();
 
             List<Graph> graphsDb = LoadGraphsFromSynthDb(graphDbFilename);
             Dictionary<Graph, List<int>> ff = LoadFrequentFeaturesFromFile(frequentFeaturesFilename);
-            List<Graph> queries = LoadFrequentFeaturesFromFile(queriesFilename).Keys.ToList();
+            List<Graph> queries =
+                LoadFrequentFeaturesFromFile(queriesFilename)
+                .Keys
+                .OrderByDescending(x => x.Size)
+                .ToList();
 
             double numberOfGraphsForMinSup = (double)(minSupPercent * graphsDb.Count) / 100;
             int minSup = (int)Math.Round(numberOfGraphsForMinSup);
@@ -49,7 +55,7 @@ namespace GIndexVsNeo4jRunner
             GIndex gIndex = BuildGIndex(ff, minSup);
             sw.Stop();
             logger.WriteInfo("Building gIndex took: " + sw.Elapsed);
-            RunQueries(queries, gIndex, graphsDb);
+            RunQueries(queries, gIndex, graphsDb, maxThreadCount);
 
             logger.WriteInfo("Done!");
 
@@ -66,39 +72,80 @@ namespace GIndexVsNeo4jRunner
         private static Dictionary<Graph, List<int>> LoadFrequentFeaturesFromFile(string graphDbFilename)
         {
             Dictionary<Graph, List<int>> ff = FrequentFeaturesFileDal.Read(graphDbFilename);
+
+            DIFactory.Resolve<ILogger>().WriteInfo("Fetched: #" + ff.Count + " FF from file");
+
             return ff;
         }
 
-
-        private static void RunQueries(List<Graph> queries, GIndex gIndex, List<Graph> graphDb)
+        private static void RunQueries(List<Graph> queries, GIndex gIndex, List<Graph> graphDb, int maxThreadCount)
         {
             ResultsCsvWriter writer = new ResultsCsvWriter();
             PatternMatcher patternMatcher = new PatternMatcher();
+            ConcurrentQueue<Graph> queue = new ConcurrentQueue<Graph>(queries);
 
-            foreach (Graph query in queries)
+            while (!queue.IsEmpty)
             {
-                try
-                {
-                    Stopwatch neo4jStopWatch = Stopwatch.StartNew();
-                    List<Graph> neo4jResult = patternMatcher.Match(query);
-                    neo4jStopWatch.Stop();
-
-                    Stopwatch gIndexStopWatch = Stopwatch.StartNew();
-                    List<Graph> gIndexResult = gIndex.Search(query, graphDb, true);
-                    gIndexStopWatch.Stop();
-
-                    Stopwatch isomorphismStopWatch = Stopwatch.StartNew();
-                    List<Graph> isomorphismResult = gIndex.Search(query, graphDb, false);
-                    isomorphismStopWatch.Stop();
-                    
-                    writer.WriteResult(neo4jStopWatch, gIndexStopWatch, isomorphismStopWatch, neo4jResult.Count, gIndexResult.Count, isomorphismResult.Count, query);
-                }
-                catch (Exception e)
-                {
-                    DIFactory.Resolve<ILogger>().WriteError(e);
-                }
-
+                ConsumeQueries(gIndex, graphDb, patternMatcher, writer, queue, maxThreadCount);
             }
+        }
+
+        private static void ConsumeQueries(GIndex gIndex, List<Graph> graphDb, PatternMatcher patternMatcher, ResultsCsvWriter writer, ConcurrentQueue<Graph> queries, int maxThreadCount)
+        {
+            if (queries.IsEmpty)
+            {
+                return;
+            }
+
+            //Task[] tasks = new Task[maxThreadCount];
+
+            for (int i = 0; i < maxThreadCount; i++)
+            {
+                //tasks[i] = Task.Factory.StartNew(() =>
+                //{
+                Graph query;
+                queries.TryDequeue(out query);
+                PerformQueryAndLogResult(gIndex, graphDb, patternMatcher, query, writer);
+                //});
+            }
+
+            //Task.WaitAll(tasks);
+        }
+
+        private static void PerformQueryAndLogResult(GIndex gIndex, List<Graph> graphDb, PatternMatcher patternMatcher, Graph query,
+            ResultsCsvWriter writer)
+        {
+            Stopwatch neo4jStopWatch = null;
+            List<Graph> neo4jResult = null;
+            Task neo4jTask = Task.Factory.StartNew(() =>
+            {
+                neo4jStopWatch = Stopwatch.StartNew();
+                neo4jResult = patternMatcher.Match(query);
+                neo4jStopWatch.Stop();
+            });
+
+            Stopwatch gIndexStopWatch = null;
+            List<Graph> gIndexResult = null;
+            Task gindexTask = Task.Factory.StartNew(() =>
+            {
+                gIndexStopWatch = Stopwatch.StartNew();
+                gIndexResult = gIndex.Search(query, graphDb, true);
+                gIndexStopWatch.Stop();
+            });
+
+            Stopwatch isomorphismStopWatch = new Stopwatch();
+            List<Graph> isomorphismResult = new List<Graph>();
+            //Task isomorphismTask = Task.Factory.StartNew(() =>
+            //{
+            //    isomorphismStopWatch = Stopwatch.StartNew();
+            //    isomorphismResult = gIndex.Search(query, graphDb, false);
+            //    isomorphismStopWatch.Stop();
+            //});
+
+            Task.WaitAll(neo4jTask, gindexTask);
+
+            writer.WriteResult(neo4jStopWatch, gIndexStopWatch, isomorphismStopWatch, neo4jResult.Count, gIndexResult.Count,
+                isomorphismResult.Count, query);
         }
 
         private static void LoadNeo4j(List<Graph> graphsDb)

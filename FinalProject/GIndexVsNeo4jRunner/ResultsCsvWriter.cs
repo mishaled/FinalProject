@@ -13,11 +13,13 @@ namespace GIndexVsNeo4jRunner
     public class ResultsCsvWriter
     {
         private StreamWriter _sw;
+        private int count;
 
         public ResultsCsvWriter()
         {
-            _sw = new StreamWriter("Results_" + Guid.NewGuid().ToString());
+            _sw = new StreamWriter("Results_" + Guid.NewGuid() + ".csv");
             _sw.WriteLine("Neo4jTime,Neo4jResults,gIndexTime,gIndexResults,isomorphismTime,isomorphismResult,querySize");
+            count = 0;
         }
 
         ~ResultsCsvWriter()
@@ -49,14 +51,15 @@ namespace GIndexVsNeo4jRunner
             DIFactory
                 .Resolve<ILogger>()
                 .WriteInfo(string.Format(
-                    "Neo4j: {0}, {1}; gIndex: {2}, {3}; isomorphism: {4}, {5}; query size: {6}",
+                    "#{7};Neo4j: {0}, {1}; gIndex: {2}, {3}; isomorphism: {4}, {5}; query size: {6}",
                     neo4jResultsNum,
                     neo4jWatch.Elapsed,
                     gIndexResultsNum,
                     gIndexWatch.Elapsed,
                     isomorphismResult,
                     isomorphismWatch.Elapsed,
-                    query.Size
+                    query.Size,
+                    ++count
                     ));
 
             _sw.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6}", neo4jWatch.Elapsed, neo4jResultsNum, gIndexWatch.Elapsed, gIndexResultsNum, isomorphismWatch.Elapsed, isomorphismResult, query.Size));

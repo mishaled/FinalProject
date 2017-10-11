@@ -84,6 +84,10 @@
       <Project>{d031c4cf-f289-4adb-9ada-29c1912443d2}</Project>
       <Name>Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TestsFramework\TestsFramework.csproj">
+      <Project>{48c69dc5-a66a-458c-99bc-cb6bb60736ac}</Project>
+      <Name>TestsFramework</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DAL.EdgePathToCypherQueryConverter">
+    <Position X="0.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAJAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EdgePathToCypherQueryConverter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DAL.FrequentFeaturesFileDal">
+    <Position X="0.5" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>FrequentFeaturesFileDal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DAL.GraphDatabaseCsvWriter">
+    <Position X="3.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>GraphDatabaseCsvWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DAL.Neo4jConnectionManager">
+    <Position X="0.5" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAgAAAAAAgAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Neo4jConnectionManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DAL.Neo4jDAL" BaseTypeListCollapsed="true">
+    <Position X="3.5" Y="2.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAIAAAEAkAAAIACCBIAAACAAgAADAAAAE=</HashCode>
+      <FileName>Neo4jDAL.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DAL.SyntheticGraphDatabaseReader">
+    <Position X="7.5" Y="2.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAABAAQAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SyntheticGraphDatabaseReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DAL.SyntheticGraphDatabaseWriter">
+    <Position X="7.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAQAAAAAAAAAAAAAAAAAAAAAEAAAg=</HashCode>
+      <FileName>SyntheticGraphDatabaseWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="DAL.INeo4jDAL">
+    <Position X="3.5" Y="7.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAgAAAIAACAAAAACAAgAABAAAAE=</HashCode>
+      <FileName>INeo4jDAL.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

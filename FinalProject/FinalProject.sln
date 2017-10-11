@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GIndexVsNeo4jRunner", "GInd
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrequentFeaturesFileWriter", "FrequentFeaturesFileWriter\FrequentFeaturesFileWriter.csproj", "{4233ECE6-AE71-46D3-838A-865B1DE31A1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestsFramework", "TestsFramework\TestsFramework.csproj", "{48C69DC5-A66A-458C-99BC-CB6BB60736AC}"
+EndProject
+Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "ModelingProject1", "ModelingProject1\ModelingProject1.modelproj", "{D3F42666-A00B-4B18-97A6-2AA7F155EDA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,14 @@ Global
 		{4233ECE6-AE71-46D3-838A-865B1DE31A1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4233ECE6-AE71-46D3-838A-865B1DE31A1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4233ECE6-AE71-46D3-838A-865B1DE31A1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48C69DC5-A66A-458C-99BC-CB6BB60736AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48C69DC5-A66A-458C-99BC-CB6BB60736AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48C69DC5-A66A-458C-99BC-CB6BB60736AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48C69DC5-A66A-458C-99BC-CB6BB60736AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3F42666-A00B-4B18-97A6-2AA7F155EDA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3F42666-A00B-4B18-97A6-2AA7F155EDA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3F42666-A00B-4B18-97A6-2AA7F155EDA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3F42666-A00B-4B18-97A6-2AA7F155EDA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

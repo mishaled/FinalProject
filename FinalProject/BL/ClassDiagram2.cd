@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BL.FrequentFeatureSelector">
+    <Position X="0.5" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAIACAQAAAACAABAAgIIAAgAAgQAAAAAAAAAYAAAAwQ=</HashCode>
+      <FileName>FrequentFeatureSelector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BL.GIndex">
+    <Position X="4" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAASAAAgAAAAAAgAAAAABACAAAAAgAAgAggAA=</HashCode>
+      <FileName>GIndex.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BL.GraphPathsGenerator">
+    <Position X="0.5" Y="4.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAIAEAAAAA=</HashCode>
+      <FileName>GraphPathsGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BL.PathFinder">
+    <Position X="4" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAIAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>PathFinder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BL.PatternMatcher">
+    <Position X="6.75" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAQAAAAAQAAAIgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PatternMatcher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BL.SubgraphIsomorphismGenerator">
+    <Position X="0.5" Y="6.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAACAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>SubgraphIsomorphismGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BL.SyntheticGraphDatabaseLoader">
+    <Position X="6.75" Y="4.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SyntheticGraphDatabaseLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

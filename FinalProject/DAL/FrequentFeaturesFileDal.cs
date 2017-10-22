@@ -15,8 +15,11 @@ namespace DAL
         public static string Write(Dictionary<Graph, List<int>> frequentFeatures, string originalFileName, double minSup)
         {
             FileInfo originalFileInfo = new FileInfo(originalFileName);
-            string ffFileName = string.Format("{0}__{1}__{2}.data", originalFileInfo.Name.Replace(".", "_"),
-                minSup.ToString().Replace(".", "_"), Guid.NewGuid());
+            string ffFileName = string.Format("{0}__{1}__{2}__{3}.data",
+                originalFileInfo.Name.Replace(".", "_"),
+                minSup.ToString().Replace(".", "_"),
+                frequentFeatures.Count,
+                Guid.NewGuid());
 
             string ffFilePath = Path.Combine(originalFileInfo.DirectoryName, ffFileName);
 

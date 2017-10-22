@@ -28,6 +28,8 @@ namespace FrequentFeaturesFileWriter
             RegisterLogger();
             ILogger logger = DIFactory.Resolve<ILogger>();
 
+            var writer = new ResultsCsvWriter();
+
             logger.WriteInfo("Start loading from synth DB");
 
             List<Graph> graphsDb = LoadGraphsFromSynthDb(graphDbFilename);
@@ -36,13 +38,13 @@ namespace FrequentFeaturesFileWriter
 
             for (int i = maxSize; i >= minSize; i -= jumpSize)
             {
-                SelectFfAndWriteToFile(logger, graphsDb, i, graphDbFilename);
+                SelectFfAndWriteToFile(logger, graphsDb, i, graphDbFilename, writer);
             }
 
             Console.Read();
         }
 
-        private static void SelectFfAndWriteToFile(ILogger logger, List<Graph> graphsDb, int minSup, string graphDbFilename)
+        private static void SelectFfAndWriteToFile(ILogger logger, List<Graph> graphsDb, int minSup, string graphDbFilename, ResultsCsvWriter writer)
         {
             logger.WriteInfo("Start selecting FF for: " + minSup);
             Stopwatch sw = Stopwatch.StartNew();
@@ -54,6 +56,8 @@ namespace FrequentFeaturesFileWriter
             logger.WriteInfo("Start writing FF to file");
 
             var filename = FrequentFeaturesFileDal.Write(features, graphDbFilename, minSup);
+
+            writer.WriteResult(features.Count, sw.Elapsed);
 
             logger.WriteInfo("Finish writing FF to file: " + filename);
         }

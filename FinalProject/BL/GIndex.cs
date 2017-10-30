@@ -164,5 +164,39 @@ namespace BL
                     y => string.Join(",", ffSelector.ComputeCanonicalLabel(y.Key)));
             return fragmentsToCanonicalLabelsDict;
         }
+
+        public override string ToString()
+        {
+            return PrintPretty("", _trie.Root);
+        }
+
+        private string PrintPretty(string indent, ITrieNode<char, string> trieNode)
+        {
+            string result = string.Empty;
+
+            result += indent;
+
+            if (trieNode.IsLeaf || trieNode.IsRoot)
+            {
+                result += "└─";
+                indent += "  ";
+            }
+            else
+            {
+                result += "├─";
+                indent += "| ";
+                //indent += "  ";
+            }
+
+            result += trieNode.KeyBit + "\n";
+            result += trieNode.Value;
+
+            for (int i = 0; i < trieNode.Descendants.Count(); i++)
+            {
+                result += "\n" + PrintPretty(indent, trieNode.Descendants.ElementAt(i));
+            }
+
+            return result;
+        }
     }
 }

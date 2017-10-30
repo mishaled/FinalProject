@@ -25,7 +25,8 @@ namespace GIndexVsNeo4jRunner
             string graphDbFilename = args[0];
             string frequentFeaturesFilename = args[1];
             string queriesFilename = args[2];
-            int minSupPercent = int.Parse(args[3]);
+            //int minSupPercent = int.Parse(args[3]);
+            int minSup = int.Parse(args[3]);
             int maxThreadCount = int.Parse(ConfigurationManager.AppSettings["MaxThreadCount"]);
 
             RegisterLogger();
@@ -39,8 +40,8 @@ namespace GIndexVsNeo4jRunner
                 .OrderByDescending(x => x.Size)
                 .ToList();
 
-            double numberOfGraphsForMinSup = (double)(minSupPercent * graphsDb.Count) / 100;
-            int minSup = (int)Math.Round(numberOfGraphsForMinSup);
+            //double numberOfGraphsForMinSup = (double)(minSupPercent * graphsDb.Count) / 100;
+            //int minSup = (int)Math.Round(numberOfGraphsForMinSup);
 
             RegisterDal();
             DIFactory
@@ -135,12 +136,12 @@ namespace GIndexVsNeo4jRunner
 
             Stopwatch isomorphismStopWatch = new Stopwatch();
             List<Graph> isomorphismResult = new List<Graph>();
-            //Task isomorphismTask = Task.Factory.StartNew(() =>
-            //{
-            //    isomorphismStopWatch = Stopwatch.StartNew();
-            //    isomorphismResult = gIndex.Search(query, graphDb, false);
-            //    isomorphismStopWatch.Stop();
-            //});
+            Task isomorphismTask = Task.Factory.StartNew(() =>
+            {
+                isomorphismStopWatch = Stopwatch.StartNew();
+                isomorphismResult = gIndex.Search(query, graphDb, false);
+                isomorphismStopWatch.Stop();
+            });
 
             Task.WaitAll(neo4jTask, gindexTask);
 

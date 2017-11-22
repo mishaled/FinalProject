@@ -13,6 +13,18 @@ namespace Model
         public int label { get; set; }
         public int graphId { get; set; } // graph contains this DFS code (edge)
 
+        public Node(Node other = null)
+        {
+            if (other == null)
+            {
+                return;
+            }
+
+            id = other.id;
+            label = other.label;
+            graphId = other.graphId;
+        }
+
         public override bool Equals(object obj)
         {
             var other = obj as Node;

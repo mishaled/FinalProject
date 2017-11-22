@@ -16,7 +16,8 @@ namespace Neo4jSyntheticDatabaseFiller
     {
         static void Main(string[] args)
         {
-            RegisterDal();
+            Registration.RegisterDal();
+
             RegisterLogger();
             var logger = DIFactory.Resolve<ILogger>();
 
@@ -41,15 +42,6 @@ namespace Neo4jSyntheticDatabaseFiller
             logger.WriteInfo("Finished");
 
             Console.Read();
-        }
-
-        private static void RegisterDal()
-        {
-            string neo4jUrl = ConfigurationManager.AppSettings.Get("Neo4jUrl");
-            string neo4jUsername = ConfigurationManager.AppSettings.Get("Neo4jUsername");
-            string neo4jPassword = ConfigurationManager.AppSettings.Get("Neo4jPassword");
-            Neo4jDAL dal = new Neo4jDAL(neo4jUrl, neo4jUsername, neo4jPassword);
-            DIFactory.Register<INeo4jDAL>(dal);
         }
 
         private static void RegisterLogger()

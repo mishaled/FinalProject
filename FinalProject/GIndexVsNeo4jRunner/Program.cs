@@ -43,7 +43,7 @@ namespace GIndexVsNeo4jRunner
             //double numberOfGraphsForMinSup = (double)(minSupPercent * graphsDb.Count) / 100;
             //int minSup = (int)Math.Round(numberOfGraphsForMinSup);
 
-            RegisterDal();
+            Registration.RegisterDal();
             DIFactory
                 .Resolve<INeo4jDAL>()
                 .CleanDb();
@@ -161,15 +161,6 @@ namespace GIndexVsNeo4jRunner
             gIndex.Fill(ff);
 
             return gIndex;
-        }
-
-        private static void RegisterDal()
-        {
-            string neo4jUrl = ConfigurationManager.AppSettings.Get("Neo4jUrl");
-            string neo4jUsername = ConfigurationManager.AppSettings.Get("Neo4jUsername");
-            string neo4jPassword = ConfigurationManager.AppSettings.Get("Neo4jPassword");
-            Neo4jDAL dal = new Neo4jDAL(neo4jUrl, neo4jUsername, neo4jPassword);
-            DIFactory.Register<INeo4jDAL>(dal);
         }
 
         private static void RegisterLogger()

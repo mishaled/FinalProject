@@ -22,6 +22,17 @@ namespace Model
             support = 1;
         }
 
+        public DFS_Code(DFS_Code other)
+        {
+            u = other.u;
+            v = other.v;
+            l_u = other.l_u;
+            l_v = other.l_v;
+            l_w = other.l_w;
+            support = other.support;
+            GraphID = other.GraphID;
+        }
+
         public override bool Equals(object obj)
         {
             DFS_Code other = obj as DFS_Code;

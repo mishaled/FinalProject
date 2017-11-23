@@ -108,6 +108,7 @@ namespace DAL
         {
             EdgePathToCypherQueryConverter converter = new EdgePathToCypherQueryConverter();
             string neo4jQuery = converter.Convert(path);
+            DIFactory.Resolve<ILogger>().WriteInfo(string.Format("Running Query: {0}", neo4jQuery));
 
             List<int> ids = new List<int>();
 
@@ -120,10 +121,6 @@ namespace DAL
                     ids.Add(int.Parse(record["graphId"].ToString()));
                 }
             }
-
-            //DIFactory
-            //    .Resolve<ILogger>()
-            //    .WriteInfo("Finished getting matching graph ids: " + string.Join(",", ids));
 
             return ids
                 .Distinct()

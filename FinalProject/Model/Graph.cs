@@ -22,7 +22,7 @@ namespace Model
         public Graph(List<DFS_Code> edges)
         {
             nodes = new List<Node>();
-            this.edges = edges;
+            this.edges = new List<DFS_Code>();
 
             foreach (DFS_Code edge in edges)
             {
@@ -35,6 +35,8 @@ namespace Model
                 {
                     AddNode(edge.v, edge.l_v);
                 }
+
+                this.edges.Add(new DFS_Code(edge));
             }
         }
 

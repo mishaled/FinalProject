@@ -27,7 +27,7 @@ namespace GIndexVsNeo4jRunner
             string queriesFilename = args[2];
             //int minSupPercent = int.Parse(args[3]);
             int minSup = int.Parse(args[3]);
-            int maxThreadCount = int.Parse(ConfigurationManager.AppSettings["MaxThreadCount"]);
+            //int maxThreadCount = int.Parse(ConfigurationManager.AppSettings["MaxThreadCount"]);
 
             RegisterLogger();
             var logger = DIFactory.Resolve<ILogger>();
@@ -56,7 +56,8 @@ namespace GIndexVsNeo4jRunner
             GIndex gIndex = BuildGIndex(ff, minSup);
             sw.Stop();
             logger.WriteInfo("Building gIndex took: " + sw.Elapsed);
-            RunQueries(queries, gIndex, graphsDb, maxThreadCount);
+            //RunQueries(queries, gIndex, graphsDb, maxThreadCount);
+            RunQueries(queries, gIndex, graphsDb);
 
             logger.WriteInfo("Done!");
 
@@ -79,7 +80,8 @@ namespace GIndexVsNeo4jRunner
             return ff;
         }
 
-        private static void RunQueries(List<Graph> queries, GIndex gIndex, List<Graph> graphDb, int maxThreadCount)
+        private static void RunQueries(List<Graph> queries, GIndex gIndex, List<Graph> graphDb)
+        //private static void RunQueries(List<Graph> queries, GIndex gIndex, List<Graph> graphDb, int maxThreadCount)
         {
             ResultsCsvWriter writer = new ResultsCsvWriter();
             PatternMatcher patternMatcher = new PatternMatcher();
@@ -87,11 +89,13 @@ namespace GIndexVsNeo4jRunner
 
             while (!queue.IsEmpty)
             {
-                ConsumeQueries(gIndex, graphDb, patternMatcher, writer, queue, maxThreadCount);
+                ConsumeQueries(gIndex, graphDb, patternMatcher, writer, queue);
+                //ConsumeQueries(gIndex, graphDb, patternMatcher, writer, queue, maxThreadCount);
             }
         }
 
-        private static void ConsumeQueries(GIndex gIndex, List<Graph> graphDb, PatternMatcher patternMatcher, ResultsCsvWriter writer, ConcurrentQueue<Graph> queries, int maxThreadCount)
+        private static void ConsumeQueries(GIndex gIndex, List<Graph> graphDb, PatternMatcher patternMatcher, ResultsCsvWriter writer, ConcurrentQueue<Graph> queries)
+        //private static void ConsumeQueries(GIndex gIndex, List<Graph> graphDb, PatternMatcher patternMatcher, ResultsCsvWriter writer, ConcurrentQueue<Graph> queries, int maxThreadCount)
         {
             if (queries.IsEmpty)
             {
@@ -100,15 +104,15 @@ namespace GIndexVsNeo4jRunner
 
             //Task[] tasks = new Task[maxThreadCount];
 
-            for (int i = 0; i < maxThreadCount; i++)
-            {
+            //for (int i = 0; i < maxThreadCount; i++)
+            //{
                 //tasks[i] = Task.Factory.StartNew(() =>
                 //{
                 Graph query;
                 queries.TryDequeue(out query);
                 PerformQueryAndLogResult(gIndex, graphDb, patternMatcher, query, writer);
                 //});
-            }
+            //}
 
             //Task.WaitAll(tasks);
         }

@@ -15,6 +15,13 @@ namespace BL
                 .Any();
         }
 
+        public List<Graph> FindIsomorphicGraphs(Graph subgraph, List<Graph> supergraphCandidates)
+        {
+            return supergraphCandidates
+               .Where(x => IsSubgraphIsomorphic(subgraph, x))
+               .ToList();
+        }
+
         public List<Isomorphism> GenerateIsomorphismMappings(List<DFS_Code> C, Graph G)
         {
             List<Isomorphism> iso = new List<Isomorphism>();

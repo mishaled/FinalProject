@@ -14,14 +14,13 @@ namespace QueryDemonstrator
     {
         static void Main(string[] args)
         {
-            if (args.Length < 3)
+            if (args.Length < 2)
             {
                 throw new Exception("Not enough arguments");
             }
 
             string graphDbFilename = args[0];
             string frequentFeaturesFilename = args[1];
-            int minSup = int.Parse(args[2]);
 
             RegisterLogger();
             ILogger logger = DIFactory.Resolve<ILogger>();
@@ -30,21 +29,39 @@ namespace QueryDemonstrator
 
             List<Graph> graphsDb = LoadGraphsFromSynthDb(graphDbFilename);
             Dictionary<Graph, List<int>> ff = LoadFrequentFeaturesFromFile(frequentFeaturesFilename);
-            Graph query = ff.Keys.First();
+            //int minQuerySize = graphsDb.Min(x => x.Size);
+            //Graph query = graphsDb.First(x => x.edges.Count <= minQuerySize);
+            Graph query = graphsDb.FirstOrDefault(x => x.id  == 797);
 
             logger.WriteInfo("Start building index");
 
-            GIndex gIndex = new GIndex(minSup);
+            GIndex gIndex = new GIndex();
             gIndex.Fill(ff);
 
             logger.WriteInfo("Finish building index");
 
             logger.WriteInfo(gIndex.ToString());
 
-            logger.WriteInfo("Start queriying");
-            var results = gIndex.Search(query, graphsDb);
-            var isomorphismRsults = gIndex.Search(query, graphsDb, false);
-            logger.WriteInfo("Finish queriying : " + results.Count + ", " + isomorphismRsults.Count);
+            logger.WriteInfo("Start querying");
+
+            List<Graph> gIndexResults = gIndex.Search(query, graphsDb);
+
+            SubgraphIsomorphismGenerator checker = new SubgraphIsomorphismGenerator();
+            List<Graph> isomorphismRsults = checker.FindIsomorphicGraphs(query, graphsDb);
+
+            PatternMatcher matcher = new PatternMatcher();
+            List<Graph> patterMatcherResults = matcher.Match(query);
+            //logger.WriteInfo("Finish querying : " + gIndexResults.Count + ", " + isomorphismRsults.Count + );
+
+            DIFactory
+                .Resolve<ILogger>()
+                .WriteInfo(string.Format(
+                    "Neo4j: {0}; gIndex: {1}; isomorphism: {2}; query size: {3}",
+                    patterMatcherResults.Count,
+                    gIndexResults.Count,
+                    isomorphismRsults.Count,
+                    query.Size
+                    ));
 
             Console.ReadLine();
         }

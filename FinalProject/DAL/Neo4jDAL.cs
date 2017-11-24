@@ -108,7 +108,7 @@ namespace DAL
         {
             EdgePathToCypherQueryConverter converter = new EdgePathToCypherQueryConverter();
             string neo4jQuery = converter.Convert(path);
-            DIFactory.Resolve<ILogger>().WriteInfo(string.Format("Running Query: {0}", neo4jQuery));
+            DIFactory.Resolve<ILogger>().WriteDebug(string.Format("Running Query: {0}", neo4jQuery));
 
             List<int> ids = new List<int>();
 
@@ -178,11 +178,6 @@ namespace DAL
             using (ISession session = Neo4jConnectionManager.GetSession())
             {
                 var results = session.Run(GET_SUBGRAPH_BY_ID_STATEMENT, new { graphId = id });
-
-                //DIFactory
-                //    .Resolve<ILogger>()
-                //    .WriteInfo("Finished getting graph by id: " + id);
-
                 return convertNeo4jResultIntoGraph(results, id);
             }
         }

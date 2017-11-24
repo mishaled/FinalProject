@@ -22,5 +22,10 @@ namespace Common
         {
             //throw new NotImplementedException();
         }
+
+        public void WriteDebug(string msg)
+        {
+            //throw new NotImplementedException();
+        }
     }
 }

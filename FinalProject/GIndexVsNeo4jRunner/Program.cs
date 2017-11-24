@@ -17,7 +17,7 @@ namespace GIndexVsNeo4jRunner
     {
         static void Main(string[] args)
         {
-            if (args.Length < 4)
+            if (args.Length < 3)
             {
                 throw new Exception("Not enough arguments");
             }
@@ -26,7 +26,7 @@ namespace GIndexVsNeo4jRunner
             string frequentFeaturesFilename = args[1];
             string queriesFilename = args[2];
             //int minSupPercent = int.Parse(args[3]);
-            int minSup = int.Parse(args[3]);
+            //int minSup = int.Parse(args[3]);
             //int maxThreadCount = int.Parse(ConfigurationManager.AppSettings["MaxThreadCount"]);
 
             RegisterLogger();
@@ -37,23 +37,25 @@ namespace GIndexVsNeo4jRunner
             List<Graph> queries =
                 LoadFrequentFeaturesFromFile(queriesFilename)
                 .Keys
-                .OrderByDescending(x => x.Size)
+                .OrderBy(x => x.Size)
                 .ToList();
 
             //double numberOfGraphsForMinSup = (double)(minSupPercent * graphsDb.Count) / 100;
             //int minSup = (int)Math.Round(numberOfGraphsForMinSup);
 
             Registration.RegisterDal();
+
             DIFactory
                 .Resolve<INeo4jDAL>()
                 .CleanDb();
+
             Stopwatch sw = Stopwatch.StartNew();
             LoadNeo4j(graphsDb);
             sw.Stop();
             logger.WriteInfo("Loading Neo4j took: " + sw.Elapsed);
 
             sw.Restart();
-            GIndex gIndex = BuildGIndex(ff, minSup);
+            GIndex gIndex = BuildGIndex(ff);
             sw.Stop();
             logger.WriteInfo("Building gIndex took: " + sw.Elapsed);
             //RunQueries(queries, gIndex, graphsDb, maxThreadCount);
@@ -159,9 +161,9 @@ namespace GIndexVsNeo4jRunner
             reader.Load(graphsDb);
         }
 
-        private static GIndex BuildGIndex(Dictionary<Graph, List<int>> ff, int minSup)
+        private static GIndex BuildGIndex(Dictionary<Graph, List<int>> ff)
         {
-            GIndex gIndex = new GIndex(minSup);
+            GIndex gIndex = new GIndex();
             gIndex.Fill(ff);
 
             return gIndex;

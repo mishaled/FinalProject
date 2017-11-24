@@ -17,7 +17,7 @@ namespace BL
         private List<string> _filesForCleanup;
         private string _gIndexDirectoryPath;
 
-        public GIndex(int minSup)
+        public GIndex(int minSup = -1)
         {
             _minSup = minSup;
             _trie = new StringTrie<string>();
@@ -55,6 +55,11 @@ namespace BL
 
         public void Fill(List<Graph> graphDb)
         {
+            if (_minSup <= 0)
+            {
+                throw new ArgumentException("Must initialize with positive minSup");
+            }
+
             FrequentFeatureSelector ffSelector = new FrequentFeatureSelector();
             Dictionary<Graph, List<int>> frequentFeaturesMap = ffSelector.Select(graphDb, _minSup);
 
@@ -96,6 +101,8 @@ namespace BL
         public List<Graph> Search(Graph query, List<Graph> graphDb, bool useIndex = true)
         {
             Dictionary<Graph, string> fragmentsToCanonicalLabelsDict = FindQueryFragments(query);
+
+            DIFactory.Resolve<ILogger>().WriteDebug(string.Format("Found:{0} fragments in the query", fragmentsToCanonicalLabelsDict.Count));
 
             List<int> idsList = new List<int>();
 

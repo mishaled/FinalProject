@@ -14,15 +14,12 @@ namespace BL
         public List<Graph> Match(Graph query)
         {
             List<Graph> unverifiedMatches = GetUnverifiedMatches(query);
-            List<Graph> verifiedMatches = new List<Graph>();
+            DIFactory.Resolve<ILogger>().WriteDebug(string.Format("Found {0} unverified matches", unverifiedMatches.Count));
 
-            foreach (var match in unverifiedMatches)
-            {
-                if (Verify(match, query))
-                {
-                    verifiedMatches.Add(match);
-                }
-            }
+            List<Graph> verifiedMatches = unverifiedMatches
+                .Where(match => Verify(match, query))
+                .ToList();
+            DIFactory.Resolve<ILogger>().WriteDebug(string.Format("Found {0} verified matches", verifiedMatches.Count));
 
             return verifiedMatches;
         }
@@ -46,7 +43,10 @@ namespace BL
             INeo4jDAL dal = DIFactory.Resolve<INeo4jDAL>();
 
             GraphPathsGenerator graphPathsGenerator = new GraphPathsGenerator();
-            var paths = graphPathsGenerator.Generate(query);
+            List<List<DFS_Code>> paths = graphPathsGenerator.Generate(query);
+
+            DIFactory.Resolve<ILogger>().WriteDebug(string.Format("Found {0} paths in the query", paths.Count));
+
             List<int> idsList = new List<int>();
 
             foreach (var path in paths)
@@ -55,26 +55,12 @@ namespace BL
             }
 
             return idsList.Distinct().ToList();
-
-            //return UnionNonEmpty(idsLists);
         }
 
         public bool Verify(Graph match, Graph query)
         {
             SubgraphIsomorphismGenerator generator = new SubgraphIsomorphismGenerator();
             return generator.IsSubgraphIsomorphic(query, match);
-        }
-
-        private static List<T> UnionNonEmpty<T>(IEnumerable<IEnumerable<T>> lists)
-        {
-            List<IEnumerable<T>> nonEmptyLists = lists.Where(l => l.Any()).ToList();
-
-            if (!nonEmptyLists.Any())
-            {
-                return new List<T>();
-            }
-
-            return nonEmptyLists.Aggregate((l1, l2) => l1.Union(l2)).ToList();
         }
     }
 }

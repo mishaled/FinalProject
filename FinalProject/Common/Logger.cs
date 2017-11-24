@@ -19,6 +19,12 @@ namespace Common
             _nLogger = LogManager.GetCurrentClassLogger();
         }
 
+        public void WriteDebug(string msg)
+        {
+            _nLogger.Debug(msg);
+            LogManager.Flush();
+        }
+
         public void WriteInfo(string msg)
         {
             _nLogger.Info(msg);

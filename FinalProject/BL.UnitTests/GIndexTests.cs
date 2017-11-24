@@ -50,13 +50,52 @@ namespace BL.UnitTests
                 graphsDb.Add(MockGraphFactory.GenerateSquareGraph());
             }
 
-            GIndex gIndex = new GIndex(0);
+            GIndex gIndex = new GIndex(1);
             gIndex.Fill(graphsDb);
 
             var query = MockGraphFactory.GenerateSquareGraph();
             List<Graph> graphResults = gIndex.Search(query, graphsDb);
 
             CollectionAssert.Contains(graphResults, graphsDb.First());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Fill_NoMinSupSpecified_ShouldFail()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                graphsDb.Add(MockGraphFactory.GenerateSquareGraph());
+            }
+
+            GIndex gIndex = new GIndex();
+            gIndex.Fill(graphsDb);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Fill_MinSupZero_ShouldFail()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                graphsDb.Add(MockGraphFactory.GenerateSquareGraph());
+            }
+
+            GIndex gIndex = new GIndex(0);
+            gIndex.Fill(graphsDb);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Fill_MinSupNegative_ShouldFail()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                graphsDb.Add(MockGraphFactory.GenerateSquareGraph());
+            }
+
+            GIndex gIndex = new GIndex(-1);
+            gIndex.Fill(graphsDb);
         }
 
         [TestMethod]

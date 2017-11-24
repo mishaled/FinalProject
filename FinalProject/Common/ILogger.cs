@@ -10,6 +10,7 @@ namespace Common
     public interface ILogger
     {
         //ILogger Instance { get; }
+        void WriteDebug(string msg);
         void WriteInfo(string msg);
         void WriteWarning(string msg);
         void WriteError(Exception e, string msg = null);

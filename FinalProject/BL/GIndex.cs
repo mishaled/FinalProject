@@ -32,6 +32,8 @@ namespace BL
             }
 
             Directory.CreateDirectory(_gIndexDirectoryPath);
+
+            DIFactory.Resolve<ILogger>().WriteDebug("Initialized GIndex");
         }
 
         ~GIndex()
@@ -72,6 +74,8 @@ namespace BL
             {
                 GenerateFileAndInsertIntoTrie(ff);
             }
+
+            DIFactory.Resolve<ILogger>().WriteDebug("Filled gIndex with frequent features");
         }
 
         private void GenerateFileAndInsertIntoTrie(KeyValuePair<Graph, List<int>> ff)
@@ -98,25 +102,18 @@ namespace BL
             }
         }
 
-        public List<Graph> Search(Graph query, List<Graph> graphDb, bool useIndex = true)
+        public List<Graph> Search(Graph query)
         {
             Dictionary<Graph, string> fragmentsToCanonicalLabelsDict = FindQueryFragments(query);
 
-            DIFactory.Resolve<ILogger>().WriteDebug(string.Format("Found:{0} fragments in the query", fragmentsToCanonicalLabelsDict.Count));
+            DIFactory.Resolve<ILogger>().WriteDebug(string.Format("Found {0} fragments in the query", fragmentsToCanonicalLabelsDict.Count));
 
             List<int> idsList = new List<int>();
 
-            if (useIndex)
+            foreach (Graph key in fragmentsToCanonicalLabelsDict.Keys)
             {
-                foreach (Graph key in fragmentsToCanonicalLabelsDict.Keys)
-                {
-                    List<int> graphIds = GetGraphIdsForFragment(fragmentsToCanonicalLabelsDict, key);
-                    idsList.AddRange(graphIds);
-                }
-            }
-            else
-            {
-                idsList = graphDb.Select(x => x.id).ToList();
+                List<int> graphIds = GetGraphIdsForFragment(fragmentsToCanonicalLabelsDict, key);
+                idsList.AddRange(graphIds);
             }
 
             var isomorhpismChecker = new SubgraphIsomorphismGenerator();

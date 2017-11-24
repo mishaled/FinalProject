@@ -136,7 +136,7 @@ namespace GIndexVsNeo4jRunner
             Task gindexTask = Task.Factory.StartNew(() =>
             {
                 gIndexStopWatch = Stopwatch.StartNew();
-                gIndexResult = gIndex.Search(query, graphDb, true);
+                gIndexResult = gIndex.Search(query);
                 gIndexStopWatch.Stop();
             });
 
@@ -145,7 +145,9 @@ namespace GIndexVsNeo4jRunner
             Task isomorphismTask = Task.Factory.StartNew(() =>
             {
                 isomorphismStopWatch = Stopwatch.StartNew();
-                isomorphismResult = gIndex.Search(query, graphDb, false);
+
+                SubgraphIsomorphismGenerator gen = new SubgraphIsomorphismGenerator();
+                isomorphismResult = gen.FindIsomorphicGraphs(query, graphDb);
                 isomorphismStopWatch.Stop();
             });
 

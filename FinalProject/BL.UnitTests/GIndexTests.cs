@@ -54,7 +54,7 @@ namespace BL.UnitTests
             gIndex.Fill(graphsDb);
 
             var query = MockGraphFactory.GenerateSquareGraph();
-            List<Graph> graphResults = gIndex.Search(query, graphsDb);
+            List<Graph> graphResults = gIndex.Search(query);
 
             CollectionAssert.Contains(graphResults, graphsDb.First());
         }
@@ -110,7 +110,7 @@ namespace BL.UnitTests
             gIndex.Fill(features);
 
             var query = MockGraphFactory.GenerateSquareGraph();
-            List<Graph> graphResults = gIndex.Search(query, graphsDb);
+            List<Graph> graphResults = gIndex.Search(query);
             var resultIds = graphResults.Select(x => x.id).ToList();
 
             CollectionAssert.Contains(resultIds, firstSquare.id);
@@ -131,7 +131,7 @@ namespace BL.UnitTests
             gIndex.Fill(features);
 
             var query = MockGraphFactory.GenerateSquareGraph();
-            List<Graph> graphResults = gIndex.Search(query, graphsDb);
+            List<Graph> graphResults = gIndex.Search(query);
             var resultIds = graphResults.Select(x => x.id).ToList();
 
             CollectionAssert.Contains(resultIds, firstSquare.id);
@@ -153,13 +153,12 @@ namespace BL.UnitTests
             gIndex.Fill(features);
 
             var query = MockGraphFactory.GenerateSquareGraph();
-            List<Graph> graphResults = gIndex.Search(query, graphsDb);
+            List<Graph> graphResults = gIndex.Search(query);
             var resultIds = graphResults.Select(x => x.id).ToList();
 
             CollectionAssert.Contains(resultIds, firstSquare.id);
             CollectionAssert.Contains(resultIds, secondSquare.id);
         }
-
 
         [TestMethod]
         public void Search_BunchOfDifferentGraphs_ShouldWorkCorrectly()
@@ -185,7 +184,7 @@ namespace BL.UnitTests
             gIndex.Fill(features);
 
             var query = MockGraphFactory.GenerateSquareGraph();
-            List<Graph> graphResults = gIndex.Search(query, graphsDb);
+            List<Graph> graphResults = gIndex.Search(query);
             var resultIds = graphResults.Select(x => x.id).ToList();
 
             CollectionAssert.Contains(resultIds, firstSquare.id);

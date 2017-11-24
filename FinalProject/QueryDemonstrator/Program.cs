@@ -44,7 +44,7 @@ namespace QueryDemonstrator
 
             logger.WriteInfo("Start querying");
 
-            List<Graph> gIndexResults = gIndex.Search(query, graphsDb);
+            List<Graph> gIndexResults = gIndex.Search(query);
 
             SubgraphIsomorphismGenerator checker = new SubgraphIsomorphismGenerator();
             List<Graph> isomorphismRsults = checker.FindIsomorphicGraphs(query, graphsDb);

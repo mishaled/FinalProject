@@ -114,18 +114,26 @@ namespace BL
             {
                 List<int> graphIds = GetGraphIdsForFragment(fragmentsToCanonicalLabelsDict, key);
                 idsList.AddRange(graphIds);
+
+                DIFactory.Resolve<ILogger>().WriteDebug(string.Format("Fragment {0} yielded {1} ids", fragmentsToCanonicalLabelsDict[key], graphIds.Count));
             }
 
             var isomorhpismChecker = new SubgraphIsomorphismGenerator();
-            var graphs =
+            var unverifiedGraphs =
                 idsList
                     .Distinct()
                     .Select(x => DIFactory.Resolve<INeo4jDAL>().GetGraphById(x))
                     .ToList();
 
-            return graphs
-                .Where(x => isomorhpismChecker.IsSubgraphIsomorphic(query, x))
+            DIFactory.Resolve<ILogger>().WriteDebug(string.Format("GIndex Found {0} unverified graphs that answer the query", unverifiedGraphs.Count));
+
+            var verifiedGraphs =
+                unverifiedGraphs.Where(x => isomorhpismChecker.IsSubgraphIsomorphic(query, x))
                 .ToList();
+
+            DIFactory.Resolve<ILogger>().WriteDebug(string.Format("GIndex Found {0} verified graphs that answer the query", verifiedGraphs.Count));
+
+            return verifiedGraphs;
         }
 
         private List<int> GetGraphIdsForFragment(Dictionary<Graph, string> fragmentsToCanonicalLabelsDict, Graph key)
@@ -166,6 +174,12 @@ namespace BL
                 .ToDictionary(
                     x => x.Key,
                     y => string.Join(",", ffSelector.ComputeCanonicalLabel(y.Key)));
+
+            foreach (var value in fragmentsToCanonicalLabelsDict.Values)
+            {
+                DIFactory.Resolve<ILogger>().WriteDebug(string.Format("A fragment's canonical label: {0}", value));
+            }
+
             return fragmentsToCanonicalLabelsDict;
         }
 

@@ -42,16 +42,25 @@ namespace QueryDemonstrator
 
             logger.WriteInfo(gIndex.ToString());
 
-            logger.WriteInfo("Start querying");
+            logger.WriteInfo("Start querying gIndex");
 
             List<Graph> gIndexResults = gIndex.Search(query);
+
+            logger.WriteInfo("Finish querying gIndex");
+
+            logger.WriteInfo("Start querying by brute force isomorphism");
 
             SubgraphIsomorphismGenerator checker = new SubgraphIsomorphismGenerator();
             List<Graph> isomorphismRsults = checker.FindIsomorphicGraphs(query, graphsDb);
 
+            logger.WriteInfo("Finish querying by brute force isomorphism");
+
+            logger.WriteInfo("Start querying neo4j naively");
+
             PatternMatcher matcher = new PatternMatcher();
             List<Graph> patterMatcherResults = matcher.Match(query);
-            //logger.WriteInfo("Finish querying : " + gIndexResults.Count + ", " + isomorphismRsults.Count + );
+
+            logger.WriteInfo("Finish querying neo4j naively");
 
             DIFactory
                 .Resolve<ILogger>()

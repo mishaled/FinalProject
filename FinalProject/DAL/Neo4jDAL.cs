@@ -108,7 +108,6 @@ namespace DAL
         {
             EdgePathToCypherQueryConverter converter = new EdgePathToCypherQueryConverter();
             string neo4jQuery = converter.Convert(path);
-            DIFactory.Resolve<ILogger>().WriteDebug(string.Format("Running Query: {0}", neo4jQuery));
 
             List<int> ids = new List<int>();
 
@@ -122,9 +121,13 @@ namespace DAL
                 }
             }
 
-            return ids
+            var distinctIds = ids
                 .Distinct()
                 .ToList();
+
+            DIFactory.Resolve<ILogger>().WriteDebug(string.Format("Found {0} ids for query: {1}", distinctIds.Count, neo4jQuery));
+
+            return distinctIds;
         }
 
         public void WriteWholeGraph(Graph graph)

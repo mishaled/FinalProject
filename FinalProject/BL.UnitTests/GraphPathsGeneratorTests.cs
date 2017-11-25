@@ -33,7 +33,7 @@ namespace BL.UnitTests
             List<List<DFS_Code>> actualLists = generator.Generate(graph);
 
             Assert.AreEqual(actualLists.Count, 2);
-            Assert.AreEqual("[2 1 4]", string.Join(",", actualLists[0]));
+            Assert.AreEqual("[0 1 1 4 2]", string.Join(",", actualLists[0]));
         }
 
         [TestMethod]

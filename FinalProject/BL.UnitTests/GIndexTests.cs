@@ -180,7 +180,7 @@ namespace BL.UnitTests
 
             FrequentFeatureSelector selector = new FrequentFeatureSelector();
             Dictionary<Graph, List<int>> features = selector.Select(graphsDb, 1);
-            GIndex gIndex = new GIndex(1);
+            GIndex gIndex = new GIndex();
             gIndex.Fill(features);
 
             var query = MockGraphFactory.GenerateSquareGraph();

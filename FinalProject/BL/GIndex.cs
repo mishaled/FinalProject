@@ -13,14 +13,27 @@ namespace BL
     {
         private readonly int _minSup;
         //private Trie<string> _trie;
-        private StringTrie<string> _trie;
+        //private StringTrie<string> _trie;
+        private Trie<List<DFS_Code>, DFS_Code, string> _trie;
         private List<string> _filesForCleanup;
         private string _gIndexDirectoryPath;
 
         public GIndex(int minSup = -1)
         {
+            _trie = new Trie<List<DFS_Code>, DFS_Code, string>(list =>
+           {
+               return list;
+           });
+
             _minSup = minSup;
-            _trie = new StringTrie<string>();
+
+            //_trie = new StringTrie<string>();
+            _trie = new Trie<List<DFS_Code>, DFS_Code, string>(
+                list =>
+            {
+                return list;
+            });
+
             _filesForCleanup = new List<string>();
 
             string basePath = System.Environment.CurrentDirectory;
@@ -82,7 +95,8 @@ namespace BL
         {
             string filename = Path.Combine(_gIndexDirectoryPath, Guid.NewGuid().ToString());
             FrequentFeatureSelector ffSelector = new FrequentFeatureSelector();
-            string key = string.Join(",", ffSelector.ComputeCanonicalLabel(ff.Key));
+            //string key = string.Join(",", ffSelector.ComputeCanonicalLabel(ff.Key));
+            var canonicalLabel = ffSelector.ComputeCanonicalLabel(ff.Key);
             string value = string.Join(",", ff.Value);
 
             using (StreamWriter sw = new StreamWriter(filename))
@@ -92,19 +106,19 @@ namespace BL
 
             _filesForCleanup.Add(filename);
 
-            if (!_trie.ContainsKey(ff.Key.ToString()))
+            if (!_trie.ContainsKey(canonicalLabel))
             {
-                _trie.Add(key, filename);
+                _trie.Add(canonicalLabel, filename);
             }
             else
             {
-                _trie[key] = _trie[key] + ";" + filename;
+                _trie[canonicalLabel] = _trie[canonicalLabel] + ";" + filename;
             }
         }
 
         public List<Graph> Search(Graph query)
         {
-            Dictionary<Graph, string> fragmentsToCanonicalLabelsDict = FindQueryFragments(query);
+            Dictionary<Graph, List<DFS_Code>> fragmentsToCanonicalLabelsDict = FindQueryFragments(query);
 
             DIFactory.Resolve<ILogger>().WriteDebug(string.Format("Found {0} fragments in the query", fragmentsToCanonicalLabelsDict.Count));
 
@@ -115,7 +129,7 @@ namespace BL
                 List<int> graphIds = GetGraphIdsForFragment(fragmentsToCanonicalLabelsDict, key);
                 idsList.AddRange(graphIds);
 
-                DIFactory.Resolve<ILogger>().WriteDebug(string.Format("Fragment {0} yielded {1} ids", fragmentsToCanonicalLabelsDict[key], graphIds.Count));
+                DIFactory.Resolve<ILogger>().WriteDebug(string.Format("Fragment {0} yielded {1} ids", string.Join(",", fragmentsToCanonicalLabelsDict[key]), graphIds.Count));
             }
 
             var isomorhpismChecker = new SubgraphIsomorphismGenerator();
@@ -136,7 +150,7 @@ namespace BL
             return verifiedGraphs;
         }
 
-        private List<int> GetGraphIdsForFragment(Dictionary<Graph, string> fragmentsToCanonicalLabelsDict, Graph key)
+        private List<int> GetGraphIdsForFragment(Dictionary<Graph, List<DFS_Code>> fragmentsToCanonicalLabelsDict, Graph key)
         {
             string filenames;
             if (!_trie.TryGetValue(fragmentsToCanonicalLabelsDict[key], out filenames))
@@ -166,18 +180,18 @@ namespace BL
                     .ToList();
         }
 
-        private static Dictionary<Graph, string> FindQueryFragments(Graph query)
+        private static Dictionary<Graph, List<DFS_Code>> FindQueryFragments(Graph query)
         {
             FrequentFeatureSelector ffSelector = new FrequentFeatureSelector();
             Dictionary<Graph, List<int>> fragments = ffSelector.Select(new List<Graph>() { query }, 1);
-            Dictionary<Graph, string> fragmentsToCanonicalLabelsDict = fragments
+            Dictionary<Graph, List<DFS_Code>> fragmentsToCanonicalLabelsDict = fragments
                 .ToDictionary(
                     x => x.Key,
-                    y => string.Join(",", ffSelector.ComputeCanonicalLabel(y.Key)));
+                    y => ffSelector.ComputeCanonicalLabel(y.Key));
 
             foreach (var value in fragmentsToCanonicalLabelsDict.Values)
             {
-                DIFactory.Resolve<ILogger>().WriteDebug(string.Format("A fragment's canonical label: {0}", value));
+                DIFactory.Resolve<ILogger>().WriteDebug(string.Format("A fragment's canonical label: {0}", string.Join(",", value)));
             }
 
             return fragmentsToCanonicalLabelsDict;
@@ -188,7 +202,7 @@ namespace BL
             return PrintPretty("", _trie.Root);
         }
 
-        private string PrintPretty(string indent, ITrieNode<char, string> trieNode)
+        private string PrintPretty(string indent, ITrieNode<DFS_Code, string> trieNode)
         {
             string result = string.Empty;
 

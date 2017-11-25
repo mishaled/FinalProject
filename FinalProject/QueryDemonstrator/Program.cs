@@ -31,22 +31,26 @@ namespace QueryDemonstrator
             Dictionary<Graph, List<int>> ff = LoadFrequentFeaturesFromFile(frequentFeaturesFilename);
             //int minQuerySize = graphsDb.Min(x => x.Size);
             //Graph query = graphsDb.First(x => x.edges.Count <= minQuerySize);
-            Graph query = graphsDb.FirstOrDefault(x => x.id  == 797);
+            Graph query = graphsDb.FirstOrDefault(x => x.id == 797);
 
             logger.WriteInfo("Start building index");
 
             GIndex gIndex = new GIndex();
             gIndex.Fill(ff);
 
+            logger.WriteInfo(gIndex.ToString());
+
             logger.WriteInfo("Finish building index");
 
-            logger.WriteInfo(gIndex.ToString());
+            Console.ReadLine();
 
             logger.WriteInfo("Start querying gIndex");
 
             List<Graph> gIndexResults = gIndex.Search(query);
 
             logger.WriteInfo("Finish querying gIndex");
+
+            Console.ReadLine();
 
             logger.WriteInfo("Start querying by brute force isomorphism");
 
@@ -55,12 +59,16 @@ namespace QueryDemonstrator
 
             logger.WriteInfo("Finish querying by brute force isomorphism");
 
+            Console.ReadLine();
+
             logger.WriteInfo("Start querying neo4j naively");
 
             PatternMatcher matcher = new PatternMatcher();
             List<Graph> patterMatcherResults = matcher.Match(query);
 
             logger.WriteInfo("Finish querying neo4j naively");
+
+            Console.ReadLine();
 
             DIFactory
                 .Resolve<ILogger>()

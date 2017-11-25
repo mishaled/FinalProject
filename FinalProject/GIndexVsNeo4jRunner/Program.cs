@@ -37,7 +37,7 @@ namespace GIndexVsNeo4jRunner
             List<Graph> queries =
                 LoadFrequentFeaturesFromFile(queriesFilename)
                 .Keys
-                .OrderBy(x => x.Size)
+                //.OrderBy(x => x.Size)
                 .ToList();
 
             //double numberOfGraphsForMinSup = (double)(minSupPercent * graphsDb.Count) / 100;

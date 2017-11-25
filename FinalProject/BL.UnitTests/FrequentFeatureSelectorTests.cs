@@ -86,7 +86,7 @@ namespace BL.UnitTests
             FrequentFeatureSelector selector = new FrequentFeatureSelector();
             List<DFS_Code> canonicalLabel = selector.ComputeCanonicalLabel(graph);
 
-            Assert.AreEqual("[1 0 0],[2 1 1],[3 2 2],[0 3 3]", String.Join(",", canonicalLabel));
+            Assert.AreEqual("[0 1 0 0 1],[1 2 1 1 2],[2 3 2 2 3],[3 0 3 3 0]", String.Join(",", canonicalLabel));
         }
 
         [TestMethod]
@@ -97,7 +97,7 @@ namespace BL.UnitTests
             FrequentFeatureSelector selector = new FrequentFeatureSelector();
             List<DFS_Code> canonicalLabel = selector.ComputeCanonicalLabel(graph);
 
-            Assert.AreEqual("[2 1 4]", String.Join(",", canonicalLabel));
+            Assert.AreEqual("[0 1 1 4 2]", String.Join(",", canonicalLabel));
         }
     }
 }

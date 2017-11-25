@@ -164,7 +164,7 @@ namespace Model
 
         public override string ToString()
         {
-            return string.Format("[{0} {1} {2}]", l_v, l_u, l_w);
+            return string.Format("[{0} {1} {2} {3} {4}]", u, v, l_u, l_w, l_v);
         }
     }
 }
